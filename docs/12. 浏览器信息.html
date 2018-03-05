@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="gb2312">
+    <title>浏览器信息 - jsApp</title>
+    <link rel="stylesheet" href="css/main.css" />
+    <script src="jsApp.js"></script>
+</head>
+<body>
+<div id="instruction">
+    <ol>
+        <li>
+            <p class="title"><code>$.browser.name</code></p>
+            <p>返回浏览器的名称，如：MSIE、Firefox、Safari、Chrome、Opera。（返回类型：String）</p>
+            <p class="demo">
+                <code>$.browser.name</code>
+                <span class="result"><code id="browserName"></code></span>
+            </p>
+        </li>
+        <li>
+            <p class="title"><code>$.browser.alias</code></p>
+            <p>返回浏览器的别名（即国产浏览器的标识），如果没有则返回空字符串。（返回类型：String）</p>
+            <p>如：360SE——360浏览器；sogou——搜狗浏览器；Maxthon——傲游；TheWorld——世界之窗；THEWORLD——世界之窗极速版；BIDUBrowser——百度；LBBROWSER——猎豹浏览器；RSEBROWSER——瑞星安全浏览器；QQBrowser——QQ浏览器；TencentTraveler——腾讯TT浏览器；SaaYaa——闪游。</p>
+            <p class="demo">
+                <code>$.browser.alias</code>
+                <span class="result"><code id="browserAlias"></code></span>
+            </p>
+        </li>
+        <li>
+            <p class="title"><code>$.browser.version</code></p>
+            <p>返回浏览器的版本信息。（返回类型：String）</p>
+            <p class="demo">
+                <code>$.browser.version</code>
+                <span class="result"><code id="browserVersion"></code></span>
+            </p>
+        </li>
+        <li>
+            <p class="title"><code>$.canFlash()</code></p>
+            <p>检测浏览器是否支持Flash插件。（返回类型：Boolean）</p>
+            <p class="demo">
+                <code>$.canFlash()</code>
+                <span class="result"><code id="browserCanFlash"></code></span>
+            </p>
+        </li>
+        <li>
+            <p class="title"><code>$.setHome()</code></p>
+            <p>将当前页面设为浏览器的首页。（返回类型：undefined）</p>
+            <p>该方法目前仅针对IE浏览器有效，但必须是一个完整的网页地址才能正常触发设为首页操作。</p>
+            <p>如果该方法没有执行成功，则提示用户需要手动添加首页。</p>
+            <p class="button"><button id="setHome">$.setHome()</button></p>
+        </li>
+        <li>
+            <p class="title"><code>$.addFavorite()</code></p>
+            <p>将当前页面加入浏览器收藏夹。（返回类型：undefined）</p>
+            <p>该方法目前仅支持IE、Firefox这两个浏览器。在IE中由于安全问题，本地文件将无法正常执行该操作。而在Firefox中，必须是一个绝对路径且有效的网站地址才能正常触发加入收藏操作。</p>
+            <p>如果该方法没有执行成功，则提示用户需要可按Ctrl+d进行完成。</p>
+            <p class="button"><button id="addFavorite">$.addFavorite()</button></p>
+        </li>
+    </ol>
+</div>
+<script>
+    $("#browserName").html($.browser.name);
+    $("#browserAlias").html($.browser.alias);
+    $("#browserVersion").html($.browser.version);
+    $("#browserCanFlash").html($.canFlash());
+    $("#setHome").click(function()
+    {
+        $.setHome();
+    });
+    $("#addFavorite").click(function()
+    {
+        $.addFavorite();
+    });
+</script>
+</body>
+</html>

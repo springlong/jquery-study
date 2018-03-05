@@ -1,0 +1,15 @@
+#container{width:980px;margin:0 auto 0;}
+#info{width:680px;padding-top:20px;}
+#info .button{text-indent:0;padding-left:2em;}
+#info .button button{width:200px;height:30px;padding:0;margin-top:10px;text-align:center;}
+#info .button span{font-family:"Courier New";color:green;}
+#info .button span.long{color:red;}
+#info .tips{margin:20px 0;}
+
+#box{position:fixed;left:50%;top:0;width:260px;padding:10px;border:10px solid green;margin-left:210px;margin-top:10px;font-size:12px;line-height:16px;_position:absolute;_bottom:auto;_top:expression(eval(document.documentElement.scrollTop));}
+#box div{position:relative;padding:5px;margin:10px 0 0 0;background:gray;}
+#box div p{padding:5px;margin:10px 0 0 20px;text-indent:0;background:silver;}
+div#layer1{margin-top:0;}
+
+#testPerformance{overflow:auto;width:0;height:0;}
+#nodeInfo{padding-left:1em;margin-top:20px;line-height:20px;text-indent:0}

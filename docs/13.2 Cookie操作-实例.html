@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="gb2312">
+	<title>Cookie操作 - jsApp</title>
+	<style>
+	    body{height:100%;}
+		#container{width:500px;height:500px;padding:20px;border:10px groove gray;margin:50px auto;}
+		.p_wel span{padding:0 10px;font-size:24px;font-weight:bold;color:#c00000;}
+		#txtWelcome{width:300px;color:#333;}
+	</style>
+    <script src="jsApp.js"></script>
+</head>
+<body>
+<div id="container">
+	<div>
+		<p class="p_wel">你好，这是第<span id="openTimes">1</span>次打开本页面,<br />点击下面的按钮可以修改下次打开时的欢迎文本：</p>
+		<div>
+			<input id="txtWelcome" value="" />
+			<button id="changeWelcome">修改欢迎词</button>
+			<button id="clearDate">清除数据</button>
+		</div>
+	</div>
+</div>
+<script>
+	//显示打开本页面的次数
+	var openTimes = $.getCookie("openTimes");
+	if(openTimes === null)
+	{
+		openTimes = 1;
+		$.setCookie("openTimes", openTimes, 60*24);
+	}
+	else
+	{
+		openTimes = parseInt(openTimes) + 1;
+		$.setCookie("openTimes", openTimes, 60*24);
+	}
+	$("#openTimes").html(openTimes);
+
+	//显示欢迎文本
+	var welcomeText = $.getCookie("welcomeText");
+	if(welcomeText === null)
+	{
+		var txt = "欢迎光临，前端俱乐部！";
+		alert(txt);
+		$("#txtWelcome").attr("value", txt);
+	}
+	else
+	{
+		$("#txtWelcome").attr("value", welcomeText);
+		alert(welcomeText);
+	}
+
+	//修改欢迎词
+	$("#changeWelcome").click(function()
+	{
+		$.setCookie("welcomeText", $("#txtWelcome").attr("value"), 60*24);
+		alert("修改成功！");
+	});
+
+	//清除数据
+	$("#clearDate").click(function()
+	{
+		$.delCookie("welcomeText");
+		$.delCookie("openTimes");
+		alert("清楚数据成功！");
+		location.reload();
+	});
+</script>
+</body>
+</html>

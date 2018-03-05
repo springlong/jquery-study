@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="gb2312">
+    <title>字符串扩展 - jsApp</title>
+    <link rel="stylesheet" href="css/main.css" />
+    <script src="jsApp.js"></script>
+</head>
+<body>
+<div id="instruction">
+    <ol>
+        <li>
+            <p class="title"><code>$.padStr(str, dir, len, character)</code></p>
+            <p>填充字符以使目标字符串达到指定长度，并返回填充后的结果。（返回类型：String）</p>
+            <p>参数str：目标字符串；</p>
+            <p>参数dir：填充的方向，"left"——左填充，"right"——右填充；</p>
+            <p>参数len：需要达到的指定长度；</p>
+            <p>参数character：用来进行填充的字符（如果是以&amp;开头且长度大于1的字符串作为特殊HTML编码字符来使用，否则将截取第一个字符）；</p>
+            <p class="demo">
+                <code>$.padStr("abcdefg", "left", 10, "#")</code>
+                <span class="result"><code id="padStr1"></code></span>
+            </p>
+            <p class="demo">
+                <code>$.padStr("abcdefg", "right", 10, "#")</code>
+                <span class="result"><code id="padStr2"></code></span>
+            </p>
+            <p class="demo">
+                <code>$.padStr("abcdefg", "left", 3, "#")</code>
+                <span class="result"><code id="padStr3"></code></span>
+            </p>
+            <p class="demo">
+                <code>$.padStr("abcdefg", "left", 10, "#$%")</code>
+                <span class="result"><code id="padStr4"></code></span>
+            </p>
+            <p class="demo">
+                <code>$.padStr("abcdefg", "left", 10, "&amp;nbsp;")</code>
+                <span class="result"><code id="padStr5"></code></span>
+            </p>
+        </li>
+        <li>
+            <p class="title"><code>$.dupStr(str, len)</code></p>
+            <p>返回目标字符串进行连续拼接后的结果。（返回类型：String）</p>
+            <p>参数str：目标字符串；</p>
+            <p>参数len：需要拼接的次数；</p>
+            <p class="demo">
+                <code>$.dupStr("A", 0)</code>
+                <span class="result"><code id="dupStr1"></code></span>
+            </p>
+            <p class="demo">
+                <code>$.dupStr("A", 1)</code>
+                <span class="result"><code id="dupStr2"></code></span>
+            </p>
+            <p class="demo">
+                <code>$.dupStr("A", 5)</code>
+                <span class="result"><code id="dupStr3"></code></span>
+            </p>
+            <p class="demo">
+                <code>$.dupStr("A-", 5)</code>
+                <span class="result"><code id="dupStr4"></code></span>
+            </p>
+        </li>
+        <li>
+            <p class="title"><code>String.trim()</code></p>
+            <p>去除目标字符串首尾两端的所有空格，并作为新的字符串返回（原字符串不受影响）。（返回类型：String）</p>
+            <p class="demo">
+                <code>"&nbsp;&nbsp;&nbsp;abc&nbsp;&nbsp;&nbsp;abc&nbsp;&nbsp;&nbsp;".trim()</code>
+                <span class="result"><code id="trim"></code></span>
+            </p>
+        </li>
+        <li>
+            <p class="title"><code>String.trimLeft()</code></p>
+            <p>去除目标字符串头部的所有空格，并作为新的字符串返回（原字符串不受影响）。（返回类型：String）</p>
+            <p class="demo">
+                <code>"&nbsp;&nbsp;&nbsp;abc&nbsp;&nbsp;&nbsp;abc&nbsp;&nbsp;&nbsp;".trimLeft()</code>
+                <span class="result"><code id="trimLeft"></code></span>
+            </p>
+        </li>
+        <li>
+            <p class="title"><code>String.trimRight()</code></p>
+            <p>去除目标字符串末尾的所有空格，并作为新的字符串返回（原字符串不受影响）。（返回类型：String）</p>
+            <p class="demo">
+                <code>"&nbsp;&nbsp;&nbsp;abc&nbsp;&nbsp;&nbsp;abc&nbsp;&nbsp;&nbsp;".trimRight()</code>
+                <span class="result"><code id="trimRight"></code></span>
+            </p>
+        </li>
+        <li>
+            <p class="title"><code>String.contains(match)</code></p>
+            <p>判断目标字符串中是否存在检索字符串。（返回类型：Boolean）</p>
+            <p>参数match：检索字符串；</p>
+            <p class="demo">
+                <code>"abcdefg".contains("123")</code>
+                <span class="result"><code id="contains1"></code></span>
+            </p>
+            <p class="demo">
+                <code>"abcdefg123".contains("123")</code>
+                <span class="result"><code id="contains2"></code></span>
+            </p>
+        </li>
+        <li>
+            <p class="title"><code>String.statsWith(match)</code></p>
+            <p>判断目标字符串是否以检索字符串开头。（返回类型：Boolean）</p>
+            <p>参数match：检索字符串；</p>
+            <p class="demo">
+                <code>"abcdefg".startsWith("123")</code>
+                <span class="result"><code id="startsWith1"></code></span>
+            </p>
+            <p class="demo">
+                <code>"123abcdefg".startsWith("123")</code>
+                <span class="result"><code id="startsWith2"></code></span>
+            </p>
+            <p class="demo">
+                <code>"abcdefg123".startsWith("123")</code>
+                <span class="result"><code id="startsWith3"></code></span>
+            </p>
+        </li>
+        <li>
+            <p class="title"><code>String.endsWith(match)</code></p>
+            <p>判断目标字符串是否以检索字符串结束。（返回类型：Boolean）</p>
+            <p>参数match：检索字符串；</p>
+            <p class="demo">
+                <code>"abcdefg".endsWith("123")</code>
+                <span class="result"><code id="endsWith1"></code></span>
+            </p>
+            <p class="demo">
+                <code>"123abcdefg".endsWith("123")</code>
+                <span class="result"><code id="endsWith2"></code></span>
+            </p>
+            <p class="demo">
+                <code>"abcdefg123".endsWith("123")</code>
+                <span class="result"><code id="endsWith3"></code></span>
+            </p>
+        </li>
+    </ol>
+</div>
+<script>
+    $("#padStr1").html($.padStr("abcdefg", "left", 7, "#"));
+    $("#padStr2").html($.padStr("abcdefg", "right", 10, "#"));
+    $("#padStr3").html($.padStr("abcdefg", "left", 3, "#"));
+    $("#padStr4").html($.padStr("abcdefg", "left", 10, "#$%"));
+    $("#padStr5").html($.padStr("abcdefg", "left", 10, "&nbsp;"));
+
+    $("#dupStr1").html($.dupStr("A", 0));
+    $("#dupStr2").html($.dupStr("A", 1));
+    $("#dupStr3").html($.dupStr("A", 5));
+    $("#dupStr4").html($.dupStr("A-", 5));
+
+    $("#trim").html("   abc   abc   ".trim().replace(/\s/g, "&nbsp;"));
+    $("#trimLeft").html("   abc   abc   ".trimLeft().replace(/\s/g, "&nbsp;"));
+    $("#trimRight").html("   abc   abc   ".trimRight().replace(/\s/g, "&nbsp;"));
+
+    $("#contains1").html("abcdefg".contains("123"));
+    $("#contains2").html("abcdefg123".contains("123"));
+
+    $("#startsWith1").html("abcdefg".startsWith("123"));
+    $("#startsWith2").html("123abcdefg".startsWith("123"));
+    $("#startsWith3").html("abcdefg123".startsWith("123"));
+
+    $("#endsWith1").html("abcdefg".endsWith("123"));
+    $("#endsWith2").html("123abcdefg".endsWith("123"));
+    $("#endsWith3").html("abcdefg123".endsWith("123"));
+</script>
+</body>
+</html>

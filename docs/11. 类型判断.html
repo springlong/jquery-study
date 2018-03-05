@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="gb2312">
+    <title>类型判断 - jsApp</title>
+    <style type="text/css">
+        *{margin:0;padding:0;}
+        body{padding-bottom:50px;font-size:14px;line-height:24px;}
+        section{display:block;}
+        p{margin:20px 0;}
+
+        #container{width:980px;margin:10px auto 0;}
+        #container h2{padding-bottom:10px;margin-top:30px;}
+        #container div{overflow:auto;height:200px;padding-left:20px;border:1px solid gray;background:#eee;}
+        #container p{font-family:"Courier New";}
+        #container p span{display:inline-block;width:260px;text-align:left;}
+        #container p strong{display:inline-block;width:30px;text-align:right;}
+        #container p strong.true{color:red;}
+    </style>
+    <script src="jsApp.js"></script>
+</head>
+<body>
+<div id="container">
+    <script type="text/javascript">
+        document.write("<h2>字符串：</h2><div><p><span>$.isString('asdfasdf'):</span><strong class='true'>" + $.isString("asdfasdf") + "</strong></p>");
+        document.write("<p><span>$.isString('   '):</span><strong class='true'>" + $.isString("   ") + "</strong></p>");
+        document.write("<p><span>$.isString(123):</span><strong>" + $.isString(123) + "</strong></p>");
+        document.write("<p><span>$.isString(NaN):</span><strong>" + $.isString(NaN) + "</strong></p>");
+        document.write("<p><span>$.isString(true):</span><strong>" + $.isString(true) + "</strong></p>");
+        document.write("<p><span>$.isString(null):</span><strong>" + $.isString(null) + "</strong></p>");
+        document.write("<p><span>$.isString(undefined):</span><strong>" + $.isString(undefined) + "</strong></p>");
+        document.write("<p><span>$.isString([1,2,3]):</span><strong>" + $.isString([1,2,3]) + "</strong></p>");
+        document.write("<p><span>$.isString(function(){}):</span><strong>" + $.isString(function(){}) + "</strong></p>");
+        document.write("<p><span>$.isString({a:1, b:2}):</span><strong>" + $.isString({a:1, b:2}) + "</strong></p>");
+        document.write("<p><span>$.isString(new Date()):</span><strong>" + $.isString(new Date()) + "</strong></p>");
+        document.write("<p><span>$.isString('2012/01/23'):</span><strong class='true'>" + $.isString("2012/01/23") + "</strong></p>");
+        document.write("<p><span>$.isString('2012-01-23'):</span><strong class='true'>" + $.isString("2012-01-23") + "</strong></p>");
+        document.write("<p><span>$.isString(Math):</span><strong>" + $.isString(Math) + "</strong></p>");
+        document.write("<p><span>$.isString(/\s*/):</span><strong>" + $.isString(/\s*/) + "</strong></p>");
+        document.write("<p><span>$.isString(window):</span><strong>" + $.isString(window) + "</strong></p>");
+        document.write("<p><span>$.isString(document.body):</span><strong>" + $.isString(document.body) + "</strong></p></div>");
+
+        document.write("<h2>有效字符串（即非全空格成员）：</h2><div><p><span>$.isValidString('asdfasdf'):</span><strong class='true'>" + $.isValidString("asdfasdf") + "</strong></p>");
+        document.write("<p><span>$.isValidString('   '):</span><strong>" + $.isValidString("   ") + "</strong></p>");
+        document.write("<p><span>$.isValidString(123):</span><strong>" + $.isValidString(123) + "</strong></p>");
+        document.write("<p><span>$.isValidString(NaN):</span><strong>" + $.isValidString(NaN) + "</strong></p>");
+        document.write("<p><span>$.isValidString(true):</span><strong>" + $.isValidString(true) + "</strong></p>");
+        document.write("<p><span>$.isValidString(null):</span><strong>" + $.isValidString(null) + "</strong></p>");
+        document.write("<p><span>$.isValidString(undefined):</span><strong>" + $.isValidString(undefined) + "</strong></p>");
+        document.write("<p><span>$.isValidString([1,2,3]):</span><strong>" + $.isValidString([1,2,3]) + "</strong></p>");
+        document.write("<p><span>$.isValidString(function(){}):</span><strong>" + $.isValidString(function(){}) + "</strong></p>");
+        document.write("<p><span>$.isValidString({a:1, b:2}):</span><strong>" + $.isValidString({a:1, b:2}) + "</strong></p>");
+        document.write("<p><span>$.isValidString(new Date()):</span><strong>" + $.isValidString(new Date()) + "</strong></p>");
+        document.write("<p><span>$.isValidString('2012/01/23'):</span><strong class='true'>" + $.isValidString("2012/01/23") + "</strong></p>");
+        document.write("<p><span>$.isValidString('2012-01-23'):</span><strong class='true'>" + $.isValidString("2012-01-23") + "</strong></p>");
+        document.write("<p><span>$.isValidString(Math):</span><strong>" + $.isValidString(Math) + "</strong></p>");
+        document.write("<p><span>$.isValidString(/\s*/):</span><strong>" + $.isValidString(/\s*/) + "</strong></p>");
+        document.write("<p><span>$.isValidString(window):</span><strong>" + $.isValidString(window) + "</strong></p>");
+        document.write("<p><span>$.isValidString(document.body):</span><strong>" + $.isValidString(document.body) + "</strong></p></div>");
+
+        document.write("<h2>有效数字：</h2><div><p><span>$.isNumeric('asdfasdf'):</span><strong>" + $.isNumeric("asdfasdf") + "</strong></p>");
+        document.write("<p><span>$.isNumeric('   '):</span><strong>" + $.isNumeric("   ") + "</strong></p>");
+        document.write("<p><span>$.isNumeric(123):</span><strong class='true'>" + $.isNumeric(123) + "</strong></p>");
+        document.write("<p><span>$.isNumeric(NaN):</span><strong>" + $.isNumeric(NaN) + "</strong></p>");
+        document.write("<p><span>$.isNumeric(true):</span><strong>" + $.isNumeric(true) + "</strong></p>");
+        document.write("<p><span>$.isNumeric(null):</span><strong>" + $.isNumeric(null) + "</strong></p>");
+        document.write("<p><span>$.isNumeric(undefined):</span><strong>" + $.isNumeric(undefined) + "</strong></p>");
+        document.write("<p><span>$.isNumeric([1,2,3]):</span><strong>" + $.isNumeric([1,2,3]) + "</strong></p>");
+        document.write("<p><span>$.isNumeric(function(){}):</span><strong>" + $.isNumeric(function(){}) + "</strong></p>");
+        document.write("<p><span>$.isNumeric({a:1, b:2}):</span><strong>" + $.isNumeric({a:1, b:2}) + "</strong></p>");
+        document.write("<p><span>$.isNumeric(new Date()):</span><strong>" + $.isNumeric(new Date()) + "</strong></p>");
+        document.write("<p><span>$.isNumeric('2012/01/23'):</span><strong>" + $.isNumeric("2012/01/23") + "</strong></p>");
+        document.write("<p><span>$.isNumeric('2012-01-23'):</span><strong>" + $.isNumeric("2012-01-23") + "</strong></p>");
+        document.write("<p><span>$.isNumeric(Math):</span><strong>" + $.isNumeric(Math) + "</strong></p>");
+        document.write("<p><span>$.isNumeric(/\s*/):</span><strong>" + $.isNumeric(/\s*/) + "</strong></p>");
+        document.write("<p><span>$.isNumeric(window):</span><strong>" + $.isNumeric(window) + "</strong></p>");
+        document.write("<p><span>$.isNumeric(document.body):</span><strong>" + $.isNumeric(document.body) + "</strong></p></div>");
+
+        document.write("<h2>日期：</h2><div><p><span>$.isDate('asdfasdf'):</span><strong>" + $.isDate("asdfasdf") + "</strong></p>");
+        document.write("<p><span>$.isDate('   '):</span><strong>" + $.isDate("   ") + "</strong></p>");
+        document.write("<p><span>$.isDate(new Date()):</span><strong class='true'>" + $.isDate(new Date()) + "</strong></p>");
+        document.write("<p><span>$.isDate('2012/01/23'):</span><strong>" + $.isDate("2012/01/23") + "</strong></p>");
+        document.write("<p><span>$.isDate('2012-01-23'):</span><strong>" + $.isDate("2012-01-23") + "</strong></p>");
+        document.write("<p><span>$.isDate(123):</span><strong>" + $.isDate(123) + "</strong></p>");
+        document.write("<p><span>$.isDate(NaN):</span><strong>" + $.isDate(NaN) + "</strong></p>");
+        document.write("<p><span>$.isDate(true):</span><strong>" + $.isDate(true) + "</strong></p>");
+        document.write("<p><span>$.isDate(null):</span><strong>" + $.isDate(null) + "</strong></p>");
+        document.write("<p><span>$.isDate(undefined):</span><strong>" + $.isDate(undefined) + "</strong></p>");
+        document.write("<p><span>$.isDate([1,2,3]):</span><strong>" + $.isDate([1,2,3]) + "</strong></p>");
+        document.write("<p><span>$.isDate(function(){}):</span><strong>" + $.isDate(function(){}) + "</strong></p>");
+        document.write("<p><span>$.isDate({a:1, b:2}):</span><strong>" + $.isDate({a:1, b:2}) + "</strong></p>");
+        document.write("<p><span>$.isDate(Math):</span><strong>" + $.isDate(Math) + "</strong></p>");
+        document.write("<p><span>$.isDate(/\s*/):</span><strong>" + $.isDate(/\s*/) + "</strong></p>");
+        document.write("<p><span>$.isDate(window):</span><strong>" + $.isDate(window) + "</strong></p>");
+        document.write("<p><span>$.isDate(document.body):</span><strong>" + $.isDate(document.body) + "</strong></p></div>");
+
+        document.write("<h2>日期字符串，如“2012-03-26”、“2012-3-26”、“2013/03/26”、“2013/3/26”：</h2><div><p><span>$.isDateString('asdfasdf'):</span><strong>" + $.isDateString("asdfasdf") + "</strong></p>");
+        document.write("<p><span>$.isDateString('   '):</span><strong>" + $.isDateString("   ") + "</strong></p>");
+        document.write("<p><span>$.isDateString(new Date()):</span><strong>" + $.isDateString(new Date()) + "</strong></p>");
+        document.write("<p><span>$.isDateString('2012/01/23'):</span><strong class='true'>" + $.isDateString("2012/01/23") + "</strong></p>");
+        document.write("<p><span>$.isDateString('2012-01-23'):</span><strong class='true'>" + $.isDateString("2012-01-23") + "</strong></p>");
+        document.write("<p><span>$.isDateString(123):</span><strong>" + $.isDateString(123) + "</strong></p>");
+        document.write("<p><span>$.isDateString(NaN):</span><strong>" + $.isDateString(NaN) + "</strong></p>");
+        document.write("<p><span>$.isDateString(true):</span><strong>" + $.isDateString(true) + "</strong></p>");
+        document.write("<p><span>$.isDateString(null):</span><strong>" + $.isDateString(null) + "</strong></p>");
+        document.write("<p><span>$.isDateString(undefined):</span><strong>" + $.isDateString(undefined) + "</strong></p>");
+        document.write("<p><span>$.isDateString([1,2,3]):</span><strong>" + $.isDateString([1,2,3]) + "</strong></p>");
+        document.write("<p><span>$.isDateString(function(){}):</span><strong>" + $.isDateString(function(){}) + "</strong></p>");
+        document.write("<p><span>$.isDateString({a:1, b:2}):</span><strong>" + $.isDateString({a:1, b:2}) + "</strong></p>");
+        document.write("<p><span>$.isDateString(Math):</span><strong>" + $.isDateString(Math) + "</strong></p>");
+        document.write("<p><span>$.isDateString(/\s*/):</span><strong>" + $.isDateString(/\s*/) + "</strong></p>");
+        document.write("<p><span>$.isDateString(window):</span><strong>" + $.isDateString(window) + "</strong></p>");
+        document.write("<p><span>$.isDateString(document.body):</span><strong>" + $.isDateString(document.body) + "</strong></p></div>");
+
+        document.write("<h2>函数：</h2><div><p><span>$.isFunction('asdfasdf'):</span><strong>" + $.isFunction("asdfasdf") + "</strong></p>");
+        document.write("<p><span>$.isFunction('   '):</span><strong>" + $.isFunction("   ") + "</strong></p>");
+        document.write("<p><span>$.isFunction(function(){}):</span><strong class='true'>" + $.isFunction(function(){}) + "</strong></p>");
+        document.write("<p><span>$.isFunction(123):</span><strong>" + $.isFunction(123) + "</strong></p>");
+        document.write("<p><span>$.isFunction(NaN):</span><strong>" + $.isFunction(NaN) + "</strong></p>");
+        document.write("<p><span>$.isFunction(true):</span><strong>" + $.isFunction(true) + "</strong></p>");
+        document.write("<p><span>$.isFunction(null):</span><strong>" + $.isFunction(null) + "</strong></p>");
+        document.write("<p><span>$.isFunction(undefined):</span><strong>" + $.isFunction(undefined) + "</strong></p>");
+        document.write("<p><span>$.isFunction([1,2,3]):</span><strong>" + $.isFunction([1,2,3]) + "</strong></p>");
+        document.write("<p><span>$.isFunction({a:1, b:2}):</span><strong>" + $.isFunction({a:1, b:2}) + "</strong></p>");
+        document.write("<p><span>$.isFunction(new Date()):</span><strong>" + $.isFunction(new Date()) + "</strong></p>");
+        document.write("<p><span>$.isFunction('2012/01/23'):</span><strong>" + $.isFunction("2012/01/23") + "</strong></p>");
+        document.write("<p><span>$.isFunction('2012-01-23'):</span><strong>" + $.isFunction("2012-01-23") + "</strong></p>");
+        document.write("<p><span>$.isFunction(Math):</span><strong>" + $.isFunction(Math) + "</strong></p>");
+        document.write("<p><span>$.isFunction(/\s*/):</span><strong>" + $.isFunction(/\s*/) + "</strong></p>");
+        document.write("<p><span>$.isFunction(window):</span><strong>" + $.isFunction(window) + "</strong></p>");
+        document.write("<p><span>$.isFunction(document.body):</span><strong>" + $.isFunction(document.body) + "</strong></p></div>");
+
+        document.write("<h2>数组：</h2><div><p><span>$.isArray('asdfasdf'):</span><strong>" + $.isArray("asdfasdf") + "</strong></p>");
+        document.write("<p><span>$.isArray('   '):</span><strong>" + $.isArray("   ") + "</strong></p>");
+        document.write("<p><span>$.isArray([1,2,3]):</span><strong class='true'>" + $.isArray([1,2,3]) + "</strong></p>");
+        document.write("<p><span>$.isArray(123):</span><strong>" + $.isArray(123) + "</strong></p>");
+        document.write("<p><span>$.isArray(NaN):</span><strong>" + $.isArray(NaN) + "</strong></p>");
+        document.write("<p><span>$.isArray(true):</span><strong>" + $.isArray(true) + "</strong></p>");
+        document.write("<p><span>$.isArray(null):</span><strong>" + $.isArray(null) + "</strong></p>");
+        document.write("<p><span>$.isArray(undefined):</span><strong>" + $.isArray(undefined) + "</strong></p>");
+        document.write("<p><span>$.isArray(function(){}):</span><strong>" + $.isArray(function(){}) + "</strong></p>");
+        document.write("<p><span>$.isArray({a:1, b:2}):</span><strong>" + $.isArray({a:1, b:2}) + "</strong></p>");
+        document.write("<p><span>$.isArray(new Date()):</span><strong>" + $.isArray(new Date()) + "</strong></p>");
+        document.write("<p><span>$.isArray('2012/01/23'):</span><strong>" + $.isArray("2012/01/23") + "</strong></p>");
+        document.write("<p><span>$.isArray('2012-01-23'):</span><strong>" + $.isArray("2012-01-23") + "</strong></p>");
+        document.write("<p><span>$.isArray(Math):</span><strong>" + $.isArray(Math) + "</strong></p>");
+        document.write("<p><span>$.isArray(/\s*/):</span><strong>" + $.isArray(/\s*/) + "</strong></p>");
+        document.write("<p><span>$.isArray(window):</span><strong>" + $.isArray(window) + "</strong></p>");
+        document.write("<p><span>$.isArray(document.body):</span><strong>" + $.isArray(document.body) + "</strong></p></div>");
+
+        document.write("<h2>数组相似（即包含length属性，且该值为数字类型。window和function除外）：</h2><div><p><span>$.isArrayLike('asdfasdf'):</span><strong class='true'>" + $.isArrayLike("asdfasdf") + "</strong></p>");
+        document.write("<p><span>$.isArrayLike('   '):</span><strong class='true'>" + $.isArrayLike("   ") + "</strong></p>");
+        document.write("<p><span>$.isArrayLike([1,2,3]):</span><strong class='true'>" + $.isArrayLike([1,2,3]) + "</strong></p>");
+        document.write("<p><span>$.isArrayLike(123):</span><strong>" + $.isArrayLike(123) + "</strong></p>");
+        document.write("<p><span>$.isArrayLike(NaN):</span><strong>" + $.isArrayLike(NaN) + "</strong></p>");
+        document.write("<p><span>$.isArrayLike(true):</span><strong>" + $.isArrayLike(true) + "</strong></p>");
+        document.write("<p><span>$.isArrayLike(null):</span><strong>" + $.isArrayLike(null) + "</strong></p>");
+        document.write("<p><span>$.isArrayLike(undefined):</span><strong>" + $.isArrayLike(undefined) + "</strong></p>");
+        document.write("<p><span>$.isArrayLike(function(){}):</span><strong>" + $.isArrayLike(function(){}) + "</strong></p>");
+        document.write("<p><span>$.isArrayLike({a:1, b:2}):</span><strong>" + $.isArrayLike({a:1, b:2}) + "</strong></p>");
+        document.write("<p><span>$.isArrayLike(new Date()):</span><strong>" + $.isArrayLike(new Date()) + "</strong></p>");
+        document.write("<p><span>$.isArrayLike('2012/01/23'):</span><strong class='true'>" + $.isArrayLike("2012/01/23") + "</strong></p>");
+        document.write("<p><span>$.isArrayLike('2012-01-23'):</span><strong class='true'>" + $.isArrayLike("2012-01-23") + "</strong></p>");
+        document.write("<p><span>$.isArrayLike(Math):</span><strong>" + $.isArrayLike(Math) + "</strong></p>");
+        document.write("<p><span>$.isArrayLike(/\s*/):</span><strong>" + $.isArrayLike(/\s*/) + "</strong></p>");
+        document.write("<p><span>$.isArrayLike(window):</span><strong>" + $.isArrayLike(window) + "</strong></p>");
+        document.write("<p><span>$.isArrayLike(document.body):</span><strong>" + $.isArrayLike(document.body) + "</strong></p></div>");
+
+        document.write("<h2>通过{}或者new Object()创建的对象（就是指除内置对象和HTML对象外的自定义对象）：</h2><div><p><span>$.isPlainObject('asdfasdf'):</span><strong>" + $.isPlainObject("asdfasdf") + "</strong></p>");
+        document.write("<p><span>$.isPlainObject('   '):</span><strong>" + $.isPlainObject("   ") + "</strong></p>");
+        document.write("<p><span>$.isPlainObject({a:1, b:2}):</span><strong class='true'>" + $.isPlainObject({a:1, b:2}) + "</strong></p>");
+        document.write("<p><span>$.isPlainObject(123):</span><strong>" + $.isPlainObject(123) + "</strong></p>");
+        document.write("<p><span>$.isPlainObject(NaN):</span><strong>" + $.isPlainObject(NaN) + "</strong></p>");
+        document.write("<p><span>$.isPlainObject(true):</span><strong>" + $.isPlainObject(true) + "</strong></p>");
+        document.write("<p><span>$.isPlainObject(null):</span><strong>" + $.isPlainObject(null) + "</strong></p>");
+        document.write("<p><span>$.isPlainObject(undefined):</span><strong>" + $.isPlainObject(undefined) + "</strong></p>");
+        document.write("<p><span>$.isPlainObject([1,2,3]):</span><strong>" + $.isPlainObject([1,2,3]) + "</strong></p>");
+        document.write("<p><span>$.isPlainObject(function(){}):</span><strong>" + $.isPlainObject(function(){}) + "</strong></p>");
+        document.write("<p><span>$.isPlainObject(new Date()):</span><strong>" + $.isPlainObject(new Date()) + "</strong></p>");
+        document.write("<p><span>$.isPlainObject('2012/01/23'):</span><strong>" + $.isPlainObject("2012/01/23") + "</strong></p>");
+        document.write("<p><span>$.isPlainObject('2012-01-23'):</span><strong>" + $.isPlainObject("2012-01-23") + "</strong></p>");
+        document.write("<p><span>$.isPlainObject(Math):</span><strong>" + $.isPlainObject(Math) + "</strong></p>");
+        document.write("<p><span>$.isPlainObject(/\s*/):</span><strong>" + $.isPlainObject(/\s*/) + "</strong></p>");
+        document.write("<p><span>$.isPlainObject(window):</span><strong>" + $.isPlainObject(window) + "</strong></p>");
+        document.write("<p><span>$.isPlainObject(document.body):</span><strong>" + $.isPlainObject(document.body) + "</strong></p></div>");
+
+        document.write("<h2>一个空对象（即不包含任何成员）：</h2><div><p><span>$.isEmptyObject('asdfasdf'):</span><strong>" + $.isEmptyObject("asdfasdf") + "</strong></p>");
+        document.write("<p><span>$.isEmptyObject('   '):</span><strong>" + $.isEmptyObject("   ") + "</strong></p>");
+        document.write("<p><span>$.isEmptyObject({a:1, b:2}):</span><strong>" + $.isEmptyObject({a:1, b:2}) + "</strong></p>");
+        document.write("<p><span>$.isEmptyObject(123):</span><strong class='true'>" + $.isEmptyObject(123) + "</strong></p>");
+        document.write("<p><span>$.isEmptyObject(NaN):</span><strong class='true'>" + $.isEmptyObject(NaN) + "</strong></p>");
+        document.write("<p><span>$.isEmptyObject(true):</span><strong class='true'>" + $.isEmptyObject(true) + "</strong></p>");
+        document.write("<p><span>$.isEmptyObject(null):</span><strong class='true'>" + $.isEmptyObject(null) + "</strong></p>");
+        document.write("<p><span>$.isEmptyObject(undefined):</span><strong class='true'>" + $.isEmptyObject(undefined) + "</strong></p>");
+        document.write("<p><span>$.isEmptyObject([1,2,3]):</span><strong>" + $.isEmptyObject([1,2,3]) + "</strong></p>");
+        document.write("<p><span>$.isEmptyObject(function(){}):</span><strong class='true'>" + $.isEmptyObject(function(){}) + "</strong></p>");
+        document.write("<p><span>$.isEmptyObject(new Date()):</span><strong class='true'>" + $.isEmptyObject(new Date()) + "</strong></p>");
+        document.write("<p><span>$.isEmptyObject('2012/01/23'):</span><strong>" + $.isEmptyObject("2012/01/23") + "</strong></p>");
+        document.write("<p><span>$.isEmptyObject('2012-01-23'):</span><strong>" + $.isEmptyObject("2012-01-23") + "</strong></p>");
+        document.write("<p><span>$.isEmptyObject(Math):</span><strong class='true'>" + $.isEmptyObject(Math) + "</strong></p>");
+        document.write("<p><span>$.isEmptyObject(/\s*/):</span><strong class='true'>" + $.isEmptyObject(/\s*/) + "</strong></p>");
+        document.write("<p><span>$.isEmptyObject(window):</span><strong>" + $.isEmptyObject(window) + "</strong></p>");
+        document.write("<p><span>$.isEmptyObject(document.body):</span><strong>" + $.isEmptyObject(document.body) + "</strong></p></div>");
+
+        document.write("<h2>window对象（如当前窗口或者一个iframe）：</h2><div><p><span>$.isWindow('asdfasdf'):</span><strong>" + $.isWindow("asdfasdf") + "</strong></p>");
+        document.write("<p><span>$.isWindow('   '):</span><strong>" + $.isWindow("   ") + "</strong></p>");
+        document.write("<p><span>$.isWindow(window):</span><strong class='true'>" + $.isWindow(window) + "</strong></p>");
+        document.write("<p><span>$.isWindow(123):</span><strong>" + $.isWindow(123) + "</strong></p>");
+        document.write("<p><span>$.isWindow(NaN):</span><strong>" + $.isWindow(NaN) + "</strong></p>");
+        document.write("<p><span>$.isWindow(true):</span><strong>" + $.isWindow(true) + "</strong></p>");
+        document.write("<p><span>$.isWindow(null):</span><strong>" + $.isWindow(null) + "</strong></p>");
+        document.write("<p><span>$.isWindow(undefined):</span><strong>" + $.isWindow(undefined) + "</strong></p>");
+        document.write("<p><span>$.isWindow([1,2,3]):</span><strong>" + $.isWindow([1,2,3]) + "</strong></p>");
+        document.write("<p><span>$.isWindow(function(){}):</span><strong>" + $.isWindow(function(){}) + "</strong></p>");
+        document.write("<p><span>$.isWindow({a:1, b:2}):</span><strong>" + $.isWindow({a:1, b:2}) + "</strong></p>");
+        document.write("<p><span>$.isWindow(new Date()):</span><strong>" + $.isWindow(new Date()) + "</strong></p>");
+        document.write("<p><span>$.isWindow('2012/01/23'):</span><strong>" + $.isWindow("2012/01/23") + "</strong></p>");
+        document.write("<p><span>$.isWindow('2012-01-23'):</span><strong>" + $.isWindow("2012-01-23") + "</strong></p>");
+        document.write("<p><span>$.isWindow(Math):</span><strong>" + $.isWindow(Math) + "</strong></p>");
+        document.write("<p><span>$.isWindow(/\s*/):</span><strong>" + $.isWindow(/\s*/) + "</strong></p>");
+        document.write("<p><span>$.isWindow(document.body):</span><strong>" + $.isWindow(document.body) + "</strong></p></div>");
+
+        document.write("<h2>类型字符串：</h2><div><p><span>$.type('asdfasdf'):</span><strong>" + $.type("asdfasdf") + "</strong></p>");
+        document.write("<p><span>$.type('   '):</span><strong>" + $.type("   ") + "</strong></p>");
+        document.write("<p><span>$.type(123):</span><strong>" + $.type(123) + "</strong></p>");
+        document.write("<p><span>$.type(NaN):</span><strong>" + $.type(NaN) + "</strong></p>");
+        document.write("<p><span>$.type(true):</span><strong>" + $.type(true) + "</strong></p>");
+        document.write("<p><span>$.type(null):</span><strong>" + $.type(null) + "</strong></p>");
+        document.write("<p><span>$.type(undefined):</span><strong>" + $.type(undefined) + "</strong></p>");
+        document.write("<p><span>$.type([1,2,3]):</span><strong>" + $.type([1,2,3]) + "</strong></p>");
+        document.write("<p><span>$.type(function(){}):</span><strong>" + $.type(function(){}) + "</strong></p>");
+        document.write("<p><span>$.type({a:1, b:2}):</span><strong>" + $.type({a:1, b:2}) + "</strong></p>");
+        document.write("<p><span>$.type(new Date()):</span><strong>" + $.type(new Date()) + "</strong></p>");
+        document.write("<p><span>$.type('2012/01/23'):</span><strong>" + $.type("2012/01/23") + "</strong></p>");
+        document.write("<p><span>$.type('2012-01-23'):</span><strong>" + $.type("2012-01-23") + "</strong></p>");
+        document.write("<p><span>$.type(Math):</span><strong>" + $.type(Math) + "</strong></p>");
+        document.write("<p><span>$.type(/\s*/):</span><strong>" + $.type(/\s*/) + "</strong></p>");
+        document.write("<p><span>$.type(window):</span><strong>" + $.type(window) + "</strong></p>");
+        document.write("<p><span>$.type(document.body):</span><strong>" + $.type(document.body) + "</strong></p></div>");
+    </script>
+</div>
+</body>
+</html>

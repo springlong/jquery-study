@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="gb2312">
+    <title>next - 元素集合的遍历操作 - jsApp</title>
+    <link rel="stylesheet" href="css/main.css" />
+    <link rel="stylesheet" href="css/performance.css" />
+    <script src="jsApp.js"></script>
+    <script src="js/jsApp.syntax.js"></script>
+</head>
+<body>
+<article id="container" class="clearfix">
+    <section id="info">
+        <p>jsApp的核心语法就是使用一个选择器作为参数，并初始化jsApp对象的实例（元素集合），之后通过实例对象的相关方法和属性来完成基本的DOM操作。</p>
+        <div class="html_code js_code">
+<pre>
+$("div").next();
+</pre>
+        </div>
+        <p class="button"><button id="executeBtn1">执行上述代码</button><span></span></p>
+        <div class="html_code js_code">
+<pre>
+$("div").next().css("background-color", "orange");
+</pre>
+        </div>
+        <p class="button"><button id="executeBtn2">执行上述代码</button><span></span></p>
+    </section>
+    <section id="box">
+        <div id="layer1">
+            图层1（ID：layer1）
+            <p class="paragraph1">段落1（class： paragraph1）</p>
+            <p class="paragraph2">段落1（class： paragraph2）</p>
+            <p class="paragraph3">段落1（class： paragraph3）</p>
+        </div>
+        <div id="layer2">
+            图层2（ID：layer2）
+            <p class="paragraph1">段落1（class： paragraph1）</p>
+            <p class="paragraph2">段落1（class： paragraph2）</p>
+            <p class="paragraph3">段落1（class： paragraph3）</p>
+        </div>
+        <div id="layer3">
+            图层3（ID：layer3）
+            <p class="paragraph1" name="123">段落1（class： paragraph1）</p>
+            <p class="paragraph2">段落1（class： paragraph2）</p>
+            <p class="paragraph3">段落1（class： paragraph3）</p>
+        </div>
+        <p id="nodeInfo"></p>
+    </section>
+</article>
+<script>
+    //创建HTML元素，以测试选择器的性能问题
+    var i = 0, htmlContent = "";
+    for(; i < 400; i++)
+    {
+        htmlContent += "<div><p><strong>这里的内容是通过脚本动态创建的。</strong></p><p>段落2</p><ul><li>列表</li><li>列表</li><li>列表</li><li>列表</li><li>列表</li><li>列表</li></ul></div><div><a href=''>屠城</a><div><span>元素</span><b>元素</b><strong>元素</strong><i>元素</i><em>元素</em><code>元素</code></div></div>";
+    }
+    document.write("<div id='testPerformance'>" + htmlContent + "</div>");
+
+    //显示节点数量
+    $("#nodeInfo").html("<strong>当前节点总数：" + $("*").length + "<br />当前DIV总数：" + $("div").length + "<br />当前段落P总数：" + $("p").length +  "<br />当前A标签总数：" + $("a").length +  "<br />当前按钮button总数：" + $("button").length + "</strong>");
+
+    //执行代码区
+    $("#executeBtn1").click(function()
+    {
+        var time = $.time(function()
+        {
+            // $("div").next();
+        });
+        $(this).next().html("<span" + (time > 100 ? " class='long'" : "") + ">（" + time +  "ms）</span>");
+    });
+    $("#executeBtn2").click(function()
+    {
+        var time = $.time(function()
+        {
+            $("div").next().css("background-color", "orange");
+        });
+        $(this).next().html("<span" + (time > 100 ? " class='long'" : "") + ">（" + time +  "ms）</span>");
+    });
+
+
+    // var obj = document.getElementById("layer3")
+    // alert(Sizzle.matches("div", [obj]).length);
+    alert($.time(function()
+    {
+        // var result = Sizzle("#layer3");
+        var result = $("div").has($(".paragraph1")[0]).css("background-color", "green");
+    }))
+</script>
+</body>
+</html>

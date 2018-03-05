@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="gb2312">
+    <title>数学扩展 - jsApp</title>
+    <link rel="stylesheet" href="css/main.css" />
+    <script src="jsApp.js"></script>
+</head>
+<body>
+<div id="instruction">
+    <ol>
+        <li>
+            <p class="title"><code>$.getDecimalToHex(num, digit)</code></p>
+            <p>返回十进制数转换为十六进制字符串的结果（返回类型：String）。</p>
+            <p>参数num：需要被转换的十进制数。</p>
+            <p>参数digit：（可选）最终需要显示的字符串位数（默认为转换后的实际位数），少的用“0”进行填补。</p>
+            <p class="demo">
+                <code>$.getDecimalToHex(15)</code>
+                <span class="result"><code id="getDecimalToHex1"></code></span>
+            </p>
+            <p class="demo">
+                <code>$.getDecimalToHex(16)</code>
+                <span class="result"><code id="getDecimalToHex2"></code></span>
+            </p>
+            <p class="demo">
+                <code>$.getDecimalToHex(125)</code>
+                <span class="result"><code id="getDecimalToHex3"></code></span>
+            </p>
+            <p class="demo">
+                <code>$.getDecimalToHex(255)</code>
+                <span class="result"><code id="getDecimalToHex4"></code></span>
+            </p>
+            <p class="demo">
+                <code>$.getDecimalToHex(4095, 4)</code>
+                <span class="result"><code id="getDecimalToHex5"></code></span>
+            </p>
+            <p class="demo">
+                <code>$.getDecimalToHex(32255, 8)</code>
+                <span class="result"><code id="getDecimalToHex6"></code></span>
+            </p>
+            <p class="demo">
+                <code>$.getDecimalToHex(65535, 8)</code>
+                <span class="result"><code id="getDecimalToHex7"></code></span>
+            </p>
+        </li>
+        <li>
+            <p class="title"><code>$.getHexToDecimal(hex)</code></p>
+            <p>返回十六进制数转换为十进制的结果值（返回类型：Number）。</p>
+            <p>参数hex：需要被转换的十六进制数</p>
+            <p class="demo">
+                <code>$.getHexToDecimal("F")</code>
+                <span class="result"><code id="getHexToDecimal1"></code></span>
+            </p>
+            <p class="demo">
+                <code>$.getHexToDecimal("10")</code>
+                <span class="result"><code id="getHexToDecimal2"></code></span>
+            </p>
+            <p class="demo">
+                <code>$.getHexToDecimal("7D")</code>
+                <span class="result"><code id="getHexToDecimal3"></code></span>
+            </p>
+            <p class="demo">
+                <code>$.getHexToDecimal("FF")</code>
+                <span class="result"><code id="getHexToDecimal4"></code></span>
+            </p>
+            <p class="demo">
+                <code>$.getHexToDecimal("0FFF")</code>
+                <span class="result"><code id="getHexToDecimal5"></code></span>
+            </p>
+            <p class="demo">
+                <code>$.getHexToDecimal("00007DFF")</code>
+                <span class="result"><code id="getHexToDecimal6"></code></span>
+            </p>
+            <p class="demo">
+                <code>$.getHexToDecimal("0000FFFF")</code>
+                <span class="result"><code id="getHexToDecimal7"></code></span>
+            </p>
+        </li>
+    </ol>
+</div>
+<script>
+    $("#getDecimalToHex1").html($.getDecimalToHex(15));
+    $("#getDecimalToHex2").html($.getDecimalToHex(16));
+    $("#getDecimalToHex3").html($.getDecimalToHex(125));
+    $("#getDecimalToHex4").html($.getDecimalToHex(255));
+    $("#getDecimalToHex5").html($.getDecimalToHex(4095, 4));
+    $("#getDecimalToHex6").html($.getDecimalToHex(32255, 8));
+    $("#getDecimalToHex7").html($.getDecimalToHex(65535, 8));
+
+    $("#getHexToDecimal1").html($.getHexToDecimal("F"));
+    $("#getHexToDecimal2").html($.getHexToDecimal("10"));
+    $("#getHexToDecimal3").html($.getHexToDecimal("7D"));
+    $("#getHexToDecimal4").html($.getHexToDecimal("FF"));
+    $("#getHexToDecimal5").html($.getHexToDecimal("0FFF"));
+    $("#getHexToDecimal6").html($.getHexToDecimal("00007DFF"));
+    $("#getHexToDecimal7").html($.getHexToDecimal("0000FFFF"));
+</script>
+</body>
+</html>

@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="gb2312">
+    <title>开发库的结构组成 - jsApp</title>
+    <link rel="stylesheet" href="css/main.css" />
+    <style type="text/css">
+        #container{width:980px;margin:0 auto 0;}
+        #box{position:fixed;left:50%;top:0;width:260px;padding:10px;border:10px solid green;margin-left:210px;margin-top:10px;font-size:12px;line-height:16px;_position:absolute;_bottom:auto;_top:expression(eval(document.documentElement.scrollTop));}
+        #box div{padding:5px;margin:10px 0 0 0;background:gray;}
+        #box div p{padding:5px;margin:10px 0 0 20px;background:silver;}
+        div#layer1{margin-top:0;}
+    </style>
+    <script src="jsApp.js"></script>
+    <script src="js/jsApp.syntax.js"></script>
+</head>
+<body>
+<article id="container">
+    <h1>jsApp开发库的结构组成</h1>
+    <section>
+        <h2>基本概念</h2>
+        <div>
+            <p><strong>本开发库名为：jsApp，基本语法参考自jQuery。</strong></p>
+            <p><strong>jsApp开发库的核心内容是jsApp对象，不过你可以使用$来表示它，$作为别名指向jsApp对象（$===jsApp）。我们建议大家在开发工作中使用$，因为它更为简洁。jsApp对象提供了一系列属性和方法供开发者使用，开发者们也可以向该对象中添加自己的扩展。</strong></p>
+            <p>jsApp的基本书写格式如下：</p>
+            <div class="html_code js_code">
+<pre>
+//下一语句为id属性为“acBox”的元素设置width样式为200px，并添加了类名字符串show：
+jsApp("#acBox").css("width", "200px").addClass("show");
+
+//上面的语句可以简化如下（推荐）：
+$("#acBox").css("width", "200px").addClass("show");
+</pre>
+            </div>
+            <p><b>注：为了书写的方便，在后续文档的代码书写中，jsApp对象一律使用$表示。</b></p>
+        </div>
+    </section>
+    <section>
+        <h2>组成部分</h2>
+        <div>
+            <p><strong>jsApp开发库的功能开发主要包括四个部分</strong>：</p>
+            <ol class="questions">
+                <li>
+                    <p><b>实例成员</b></p>
+                    <p>即需要通过jsApp方法进行实例化之后才能使用的方法和属性。</p>
+                    <p>在jsApp中，这个实例化的过程我们将其称为对“<strong>元素集合</strong>”的封装（具体操作就是在jsApp方法中传递一个<strong>选择器</strong>作为参数，jsApp将返回符合选择器的所有HTML元素所组成的“<strong>伪数组</strong>”对象，即元素集合）。例如，下面的语句获取了标签名称为div的元素集合：</p>
+                    <div class="html_code js_code">
+<pre>
+var oDiv = $("div");  //获取标签名称为div的元素集合
+</pre>
+                    </div>
+                    <p>当元素集合获取完毕后之后，我们就可以通过相关属性和方法去操作它了：</p>
+                    <div class="html_code js_code">
+<pre>
+var oDivLen = oDiv.length;  //获取元素集合的长度（即存在多少个DIV元素）
+var oDivFirst = oDiv[0];    //获取元素集合中的第一个元素对象
+oDiv.css("color", "red");   //将元素集合中的每一个元素的color样式设置为红色
+</pre>
+                    </div>
+                    <p>看了上面的示例代码，大家可能会误以为通过jsApp方法封装的元素集合，其实就是通过<code>document.getElementsByTagName</code>、<code>document.getElementById</code>等方法获得的结果。在一定程度上来说，这种说法并没有错，当然也不能说它正确。jsApp方法封装的元素集合，确实来自通过<code>document.getElementsByTagName</code>等方法获得的结果，但这只是基础。jsApp还通过相关方法对其进行了扩展，使其具备原先并不具备的特性。主要有以下几点：</p>
+                    <ul>
+                        <li>
+                            <strong>伪数组</strong>
+                            <p>当一个对象具备了数组的两大特征——length属性和索引访问后，我们就可以将其称之为“伪数组”，伪数组并不是真正的数组，其并不具备数组的其他特性，如push、pop等操作。</b></p>
+                            <p>当jsApp通过选择器进行实例化之后，主要完成了元素集合（即符合选择器的所有HTML元素）的封装操作。这一操作使得jsApp的对象实例具备了length属性和索引访问的特性。length属性表示元素集合的个数，而索引访问则可以通过“[0]”的形式去访问元素集合中的值。</p>
+                            <p>如果你刚从原生JavaScript转战JS开发库，那么你极有可能对元素集合的使用和对document.getElementById等方法获得的结果的使用存在一些认知误区。下面的代码将带你走出迷惑：</p>
+                            <div class="html_code js_code">
+<pre>
+/*原生JavaScript的代码*/
+var obj = document.getElementById("acBox");     //获取ID为acBox的DOM元素
+var len = obj.length;   //获取长度信息（结果值为：undefined。因为obj此时是DOM元素，并不具备length属性）
+var id = obj.id;        //获取元素的id属性（结果值为：acBox）
+obj.title = "tips";     //为元素设置title属性
+
+/*jsApp中的代码*/
+var obj = $("#acBox");  //获取ID为acBox的元素集合
+var len = obj.length;   //这里的值要么是0（不存在时），要么为1（存在时）
+var id = obj[0].id;     //获取元素的id属性（结果值为：acBox）
+obj[0].title = "tips";  //为元素设置title属性
+</pre>
+                            </div>
+                            <p>在上面代码中的jsApp部分，如果你试图访问<code>obj.id</code>，那么其返回值将是undefined。jsApp方法获得的元素集合其实是在document.getElementById等方法获得的结果的基础上对其套了一个“外壳”，你无法直接通过jsApp方法的返回结果去操作它们的DOM属性和方法，除非通过索引访问或者使用jsApp自己提供的一些方法。</p>
+                        </li>
+                        <li>
+                            <strong>容错处理</strong>
+                            <p>下面的代码，在页面中没有acBox元素的情况下将抛出脚本异常，导致后续代码无法继续执行：</p>
+                            <div class="html_code js_code">
+<pre>
+document.getElementById("acBox").id = "acBoxNew";
+</pre>
+                            </div>
+                            <p>在jsApp中，可将上面的代码书写如下。在页面没有acBox元素的情况下并不会抛出异常，而是忽略attr方法的执行，对后续代码没有任何影响：</p>
+                            <div class="html_code js_code">
+<pre>
+$("#acBox").attr("id", "acBoxNew");
+</pre>
+                            </div>
+                        </li>
+                        <li>
+                            <strong>浏览器兼容</strong>
+                            <p>我们都知道，IE6~8浏览器与IE9+、Firefox、Chrome等浏览器存在诸多差异，因此在我们的开发工作中需要花费大量的时间去处理这些兼容性问题。jsApp专门针对这些兼容问题进行了处理和优化，使开发者们不再担心浏览器的兼容问题。例如，原先的事件绑定操作是这样的：</p>
+                            <div class="html_code js_code">
+<pre>
+if("addEventListener" in document)
+{
+    //针对标准的事件绑定
+    document.addEventListener("click", function(e)
+    {
+        alert("单击事件被触发！");
+    }, 0);
+}
+else
+{
+    //针对IE6~8的非标准的事件绑定
+    document.attachEvent("onclick", function(e)
+    {
+        alert("单击事件被触发！");
+    });
+}
+</pre>
+                            </div>
+                            <p>现在，你可以这样来添加事件绑定：</p>
+                            <div class="html_code js_code">
+<pre>
+$(document).bind("click", function(e)
+{
+    alert("单击事件被触发！");
+});
+</pre>
+                            </div>
+                        </li>
+                        <li>
+                            <strong>功能加强</strong>
+                            <p>JavaScript原生提供的属性或者方法比较有限，很难满足项目快速开发的需求。为此，jsApp针对相关操作的处理进行了加强。例如，原先操作CSS的代码如下：</p>
+                            <div class="html_code js_code">
+<pre>
+var ele = document.getElementById("acBox");
+ele.style.width = "980px";  //为acBox元素设置宽度为980px
+ele.style.height = "320px"; //为acBox元素设置高度为320px
+</pre>
+                            </div>
+                            <p>现在，你可以这样来进行书写：</p>
+                            <div class="html_code js_code">
+<pre>
+$("#acBox").css({"width": "980px", "height": "320px"});
+</pre>
+                            </div>
+                        </li>
+                        <li>
+                            <strong>链式操作</strong>
+                            <p>什么是链式操作，就是指可以对一个对象不断进行方法的执行操作（即每一次方法执行完毕之后，都会将原对象进行返回）。例如，原先的代码可能是这样写的：</p>
+                            <div class="html_code js_code">
+<pre>
+var ele = document.getElementById("acBox");
+ele.style.backgroundColor = "gray";
+ele.className += " show";
+ele.title = "new tips";
+</pre>
+                            </div>
+                            <p>现在，你可以这样来进行书写：</p>
+                            <div class="html_code js_code">
+<pre>
+$("#acBox").css("backgroundColor", "gray").addClass("show").attr("title", "new tips");
+</pre>
+                            </div>
+                        </li>
+                    </ul>
+                    <p><b>上面的内容主要对元素集合的概念和相关特性进行了讲解，关于元素集合的更多属性和方法，我们将在后续的文档中逐一进行演示。</b></p>
+                </li>
+                <li>
+                    <p><b>静态成员</b></p>
+                    <p>即可以通过jsApp直接进行访问的属性和方法。主要有：</p>
+                    <ul>
+                        <li><strong>类型判断</strong>：<code>$.isString()</code>、<code>$.isPlainObject()</code>、<code>$.isArrayLike()</code>...</li>
+                        <li><strong>浏览器信息</strong>：<code>$.browser.name</code>、<code>$.browser.version</code>、<code>$.setHome()</code>、<code>$.canFlash()</code>...</li>
+                        <li><strong>cookie操作</strong>：<code>$.setCookie()</code>、<code>$.getCookie()</code>、<code>$.delCookie()</code>...</li>
+                        <li><strong>字符串扩展</strong>：<code>$.padStr()</code>、<code>$.dupStr()</code>...</li>
+                        <li><strong>数组扩展</strong>：<code>$.makeArray()</code>...</li>
+                        <li><strong>数学扩展</strong>：<code>$.getDecimalToHex()</code>、<code>$.getHexToDecimal()</code>...</li>
+                        <li><strong>实用工具</strong>：<code>$.each()</code>...</li>
+                    </ul>
+                </li>
+                <li>
+                    <p><b>原型扩展</b></p>
+                    <p>JS开发库的一条基本原则就是不扩展内置对象的原型，主要是为了避免与浏览器本身支持的或者未来支持的原型属性产生冲突。</p>
+                    <p>为了使jsApp开发库的应用更为全面、充实，jsApp将针对String、Array等对象的原型进行部分扩展。但扩展原则有如下两条：</p>
+                    <ol>
+                        <li>ECMAScript规范中有声明，但只有部分主流浏览器支持，并不是全部浏览器兼容的原型属性。</li>
+                        <li>其他主流语言（如.NET、Java）中存在的一些实用性较高的属性或方法。</li>
+                    </ol>
+                </li>
+                <li>
+                    <p><b>浏览器兼容处理</b></p>
+                    <p>这里所说的浏览器兼容处理跟实例成员中的浏览器兼容是有区别的，后者主要是针对各大浏览器操作方式的不一致而进行的统一化处理，而这里表示的则是对浏览器Bug的修复以及不支持相关特性的兼容性处理，主要包括如下：</p>
+                    <ul>
+                        <li>让IE6~8浏览器支持HTML5的常用标签。（已实现）</li>
+                        <li>解决IE6浏览器不缓存背景图片的bug。（已实现）</li>
+                        <li>解决IE6浏览器固定定位元素在滚动条滑动时的闪屏bug。（已实现）</li>
+                        <li>让IE6~8浏览器支持部分CSS3常用属性。（准备中...）</li>
+                        <li>让IE6~8浏览器支持CSS3选择器。（准备中...）</li>
+                    </ul>
+                </li>
+            </ol>
+        </div>
+    </section>
+    <section>
+        <h2>对象扩展</h2>
+        <div>
+            <p>jsApp为开发者们提供了基本的DOM访问、动画、Ajax等操作，但这并不能满足所有开发人员的需求。这个时候，我们可以考虑对jsApp进行扩展处理。</p>
+            <p>第一种扩展方式是通过jsApp对象本身进行操作，如下代码所示：</p>
+            <div class="html_code js_code">
+<pre>
+//通过jsApp对象本身扩展实例成员
+$.prototype.newMember1 = function(){}
+$.prototype.newMember2 = function(){}
+
+//通过jsApp对象本身扩展静态成员
+$.newMember1 = function(){}
+$.newMember2 = function(){}
+</pre>
+            </div>
+            <p>第二种扩展方式是通过jsApp提供的<strong>extend方法</strong>进行操作，如下代码所示：</p>
+            <div class="html_code js_code">
+<pre>
+//通过jsApp.fn.extend()方法扩展实例成员
+$.fn.extend({
+    newMember1: function(){},
+    newMember2: function(){} 
+});
+
+//通过jsApp.extend()方法扩展静态成员
+$.extend({
+    newMember1: function(){},
+    newMember2: function(){} 
+});
+</pre>
+            </div>
+            <p>在上面的两种方式中，前者每扩展一个成员就需要书写一次$或者$.prototype，而后者即便扩展多个成员时也只需要书写一次$.extend或者$.fn.extend，所以我更喜欢后者的扩展方式，也建议大家使用后者进行扩展操作。后者的代码格式看上去也更美观漂亮，不是吗？</p>
+            <p><strong>jsApp提供的extend方法，除了进行对jsApp对象的扩展外，还有一个功能——进行合并处理。使用方式如下：</strong></p>
+            <ol>
+                <li>
+                    <p><b>普通合并</b></p>
+                    <p>当参数个数大于1，且第1个参数不是布尔值时，则将第2个参数以及后续参数中的各成员合并至第1个参数中。合并处理时，相同名称的元素将被后面的值覆盖。</p>
+                    <p>示例代码如下：</p>
+                    <div class="html_code js_code">
+<pre>
+var p1 = {name: "Tom", sex: "male", location: {city: "Shanghai", country: "China"}};
+var p2 = {name: "Jerry", age: 21, location: {capital: "Beijin", country: "China"}};
+
+//对p1和p2进行合并处理
+var result = $.extend(p1, p2);
+</pre>
+                    </div>
+                    <p>执行上述操作后，result的值等于p1，且p1最终的值如下：</p>
+                    <div class="html_code js_code">
+<pre>
+{name: "Jerry", sex: "male", location: {capital: "Beijin", country: "China"}, age: 21}
+</pre>
+                    </div>
+                    <p>上述操作中，p1的值发生了改变，如果希望只进行合并处理而不改变p1的值则可以采用下面的代码：</p>
+                    <div class="html_code js_code">
+<pre>
+var result = $.extend({}, p1, p2);
+</pre>
+                    </div>
+                </li>
+                <li>
+                    <p><b>深度合并</b></p>
+                    <p>当第1个参数为布尔值时，该参数决定是否进行深度合并（即进行合并操作时是否也对嵌套的子对象进行合并）。在这种情况下，jsApp将第三个参数以及后续参数的各成员合并至第2个参数中。合并处理时，相同名称的元素将被后面的值覆盖。</p>
+                    <p>示例代码如下：</p>
+                    <div class="html_code js_code">
+<pre>
+var p1 = {name: "Tom", sex: "male", location: {city: "Shanghai", country: "China"}};
+var p2 = {name: "Jerry", age: 21, location: {capital: "Beijin", country: "China"}};
+
+//对p1和p2进行合并处理
+var result = $.extend(false, {}, p1, p2);
+</pre>
+                    </div>
+                    <p>执行上述操作后，p1和p2的值均未改变，result的结果如下：</p>
+                    <div class="html_code js_code">
+<pre>
+{name: "Jerry", sex: "male", location: {capital: "Beijin", country: "China"}, age: 21}
+</pre>
+                    </div>
+                    <p>上面的操作中，并为开启深度合并。如果将第一个参数变更为<b>true</b>，那么result的最后结果如下：</p>
+                    <div class="html_code js_code">
+<pre>
+{name: "Jerry", sex: "male", location: {city: "Shanghai", country: "China", capital: "Beijin"}, age: 21}
+</pre>
+                    </div>
+                </li>
+                <li>
+                    <p><b>jsApp对象的扩展</b></p>
+                    <p>如果当参数只有一个时，则进行对jsApp对象的扩展操作。上面已有演示，这里就不再重复了。</p>
+                </li>
+            </ol>
+            <p><strong>对于jsApp对象中extend的方法，在使用过程中需要注意以下事项：</strong></p>
+            <ol>
+                <li>进行合并操作时，$.extend和$.fn.extend的实现结果是一致的，但建议使用$.extend进行书写。</li>
+                <li>在进行jsApp对象的扩展操作时，$.extend表示的是对静态成员的扩展，而$.fn.extend表示的是对实例成员的扩展。</li>
+                <li>为了保证扩展操作以及合并操作的正确完成，应确保被操作的参数均为Object。</li>
+            </ol>
+        </div>
+    </section>
+    <section>
+        <h2>$的命名冲突</h2>
+        <div>
+            <p>为了使开发库核心对象的书写更为简单，大部分开发库都使用$作为核心对象的书写别名。在部分情况下，一个网站项目中可能包含了除jsApp之外的其他开发库以进行协同工作，这个时候就面临着命名冲突的问题，$到底表示的是哪个开发库的核心对象。</p>
+            <p>当面临命名冲突时，不同需求的处理方式有所不同，下面以网站中同时加载jquery.js和jsApp.js为例进行相关说明。</p>
+            <ul>
+                <li>
+                    <p><b>当我们需要确保$表示的是jsApp对象时，可以采取下列办法：</b></p>
+                    <ol>
+                        <li>
+                            <p>将jsApp.js置于jquery.js之后加载，从而确保$最后被赋值的是jsApp对象。代码示例如下：</p>
+                            <div class="html_code">
+<pre>
+&lt;script src="/js/jquery.js"&gt;&lt;/script&gt;
+&lt;script src="/js/jsApp.js"&gt;&lt;/script&gt;
+</pre>
+                            </div>
+                        </li>
+                        <li>
+                            <p>使用语句块传参的方式，确保$指向jsApp对象。代码示例如下：</p>
+                            <div class="html_code js_code">
+<pre>
+(function($)
+{
+    //在这个语句块中，保证了$指向的是jsApp对象。
+})(jsApp);
+
+jsApp(document).ready(function($)
+{
+    //在这个ready事件的处理程序中，$参数指向的是jsApp对象。
+});
+</pre>
+                            </div>
+                        </li>
+                    </ol>
+                </li>
+                <li>
+                    <p><b>当我们需要用$表示jQuery对象时，可以采取下列办法：</b></p>
+                    <ol>
+                        <li>
+                            <p>将jquery.js置于jsApp.js之后加载，从而确保$最后被赋值的是jQuery对象。代码示例如下：</p>
+                            <div class="html_code">
+<pre>
+&lt;script src="/js/jsApp.js"&gt;&lt;/script&gt;
+&lt;script src="/js/jquery.js"&gt;&lt;/script&gt;
+</pre>
+                            </div>
+                        </li>
+                        <li>
+                            <p>在不确定两者加载顺序的情况下，执行jsApp对象的<strong>noConflict方法</strong>，让jsApp放弃对$的控制权，从而确保$为jQuery所有。代码示例如下：</p>
+                            <div class="html_code js_code">
+<pre>
+jsApp.noConflict();  //使jsApp避免$的命名冲突。执行该代码后如果$当前表示的是jsApp对象，则让其恢复至被赋值为jsApp之前的值。
+</pre>
+                            </div>
+                        </li>
+                    </ol>
+                </li>
+                <li>
+                    <p><b>当我们需要使用其他别名表示jsApp对象时,可以采取如下代码：</b></p>
+                    <div class="html_code js_code">
+<pre>
+$$ = jsApp.noConflict(); //使jsApp放弃对$的控制权，同时将$$指向jsApp对象（执行noConflict方法后将返回jsApp对象本身）。
+</pre>
+                    </div>
+                    <p>执行完上面的语句代码后，$将表示的是jQuery对象，而$$则表示的是jsApp对象。</p>
+                </li>
+            </ul>
+        </div>
+    </section>
+</article>
+</body>
+</html>

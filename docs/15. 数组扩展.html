@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="gb2312">
+    <title>数组扩展 - jsApp</title>
+    <link rel="stylesheet" href="css/main.css" />
+    <script src="jsApp.js"></script>
+</head>
+<body>
+<div id="instruction">
+    <ol>
+        <li>
+            <p class="title"><code>$.makeArray(nodes)</code></p>
+            <p>将参数nodes（类型为NodeList）的值转换为Array类型。（返回类型：Array）</p>
+            <p>NodeList会随着DOM的更改而被更新，在某些情况下不宜直接操作，建议转换为静态数组后再行处理。</p>
+            <p class="demo">
+                <code>$.type(document.getElementsByTagName("p"))</code>
+                <span class="result"><code id="makeArray1"></code></span>
+            </p>
+            <p class="demo">
+                <code>$.type($.makeArray(document.getElementsByTagName("p")))</code>
+                <span class="result"><code id="makeArray2"></code></span>
+            </p>
+        </li>
+        <li>
+            <p class="title"><code>Array.unique()</code></p>
+            <p>返回目标数组去除重复值之后所组成的新数组（原数组的值不受影响）。（返回类型：Array）</p>
+            <p class="demo">
+                <code>[1, 2, 3, 4, 5].unique()</code>
+                <span class="result"><code id="unique1"></code></span>
+            </p>
+            <p class="demo">
+                <code>[1, 2, 3, 3, 4, 5, 4, 3, 2, 1].unique()</code>
+                <span class="result"><code id="unique2"></code></span>
+            </p>
+        </li>
+        <li>
+            <p class="title"><code>Array.indexOf(val)</code></p>
+            <p>返回目标数组中参数val的值第一次出现所在的索引位置，不存在则返回-1。（返回类型：Number）</p>
+            <p>参数val：需要进行查询的值；</p>
+            <p class="demo">
+                <code>[1, 2, 3, 4, 5].indexOf("1")</code>
+                <span class="result"><code id="indexOf1"></code></span>
+            </p>
+            <p class="demo">
+                <code>[1, 2, 3, 4, 5].indexOf("a")</code>
+                <span class="result"><code id="indexOf2"></code></span>
+            </p>
+            <p class="demo">
+                <code>[1, 2, 3, 4, 5].indexOf(1)</code>
+                <span class="result"><code id="indexOf3"></code></span>
+            </p>
+            <p class="demo">
+                <code>[1, 2, 3, 4, 5].indexOf(5)</code>
+                <span class="result"><code id="indexOf4"></code></span>
+            </p>
+        </li>
+        <li>
+            <p class="title"><code>Array.filter(function(item, i){})</code></p>
+            <p>遍历目标数组中的每一个元素，筛选出符合条件（即回调函数返回ture时）的所有成员并以新数组的形式返回。（返回类型：Array）</p>
+            <p>回调函数-参数item：当前项的值；</p>
+            <p>回调函数-参数i：当前项的索引值；</p>
+            <p>回调函数-this：window对象；</p>
+            <p class="demo">
+                <code>[1, 2, 3, 4, 5].filter(function(item, i){ return i &lt; 2; })</code>
+                <span class="result"><code id="filter1"></code></span>
+            </p>
+            <p class="demo">
+                <code>[1, 2, 3, 4, 5].filter(function(item, i){ return item &gt; 2; })</code>
+                <span class="result"><code id="filter2"></code></span>
+            </p>
+            <p class="demo">
+                <code>[1, 2, 3, 4, 5].filter(function(item, i){ return item &gt; 5; })</code>
+                <span class="result"><code id="filter3"></code></span>
+            </p>
+            <p class="demo">
+                <code>[1, 2, 3, 4, 5].filter(function(item, i){ return item % 2 === 0; })</code>
+                <span class="result"><code id="filter4"></code></span>
+            </p>
+            <p class="demo">
+                <code>[1, 2, 3, 4, 5].filter(function(item, i){ return item % 2 !== 0; })</code>
+                <span class="result"><code id="filter5"></code></span>
+            </p>
+        </li>
+        <li>
+            <p class="title"><code>Array.forEach(function(item, i){})</code></p>
+            <p>遍历目标数组中的每一个元素，并执行回调函数。（返回类型：undefined）</p>
+            <p>回调函数-参数item：当前项的值；</p>
+            <p>回调函数-参数i：当前项的索引值；</p>
+            <p>回调函数-this：window对象；</p>
+            <p>注：下面的示例代码将遍历目标数组，并在每一行的结果元素（ID命名为“forEach1”-“forEach5”）中输出每一项的值。</p>
+            <p class="demo">
+                <code>[6, 7, 8, 9, 10].forEach(function(item, i){ $("#forEach" + ++i).html(item); })</code>
+                <span class="result"><code id="forEach1"></code></span>
+            </p>
+            <p class="demo">
+                <span>&nbsp;</span>
+                <span class="result"><code id="forEach2"></code></span>
+            </p>
+            <p class="demo">
+                <span>&nbsp;</span>
+                <span class="result"><code id="forEach3"></code></span>
+            </p>
+            <p class="demo">
+                <span>&nbsp;</span>
+                <span class="result"><code id="forEach4"></code></span>
+            </p>
+            <p class="demo">
+                <span>&nbsp;</span>
+                <span class="result"><code id="forEach5"></code></span>
+            </p>
+        </li>
+        <li>
+            <p class="title"><code>Array.remove(val)</code></p>
+            <p>删除原数组中与参数val的值相等的所有元素，并返回原数组（原数组中的值将会受到影响）。（返回类型：Array）</p>
+            <p>参数val：需要删除的值；</p>
+            <p class="demo">
+                <code>[1, 2, 3, 4, 5, 5].remove("3")</code>
+                <span class="result"><code id="remove1"></code></span>
+            </p>
+            <p class="demo">
+                <code>[1, 2, 3, 4, 5, 5].remove(3)</code>
+                <span class="result"><code id="remove2"></code></span>
+            </p>
+            <p class="demo">
+                <code>[1, 2, 3, 4, 5, 5].remove(5)</code>
+                <span class="result"><code id="remove3"></code></span>
+            </p>
+        </li>
+    </ol>
+</div>
+<script>
+    $("#makeArray1").html($.type(document.getElementsByTagName("p")));
+    $("#makeArray2").html($.type($.makeArray(document.getElementsByTagName("p"))));
+
+    $("#unique1").html("[" + [1, 2, 3, 4, 5].unique() + "]");
+    $("#unique2").html("[" + [1, 2, 3, 3, 4, 5, 4, 3, 2, 1].unique() + "]");
+
+    $("#indexOf1").html([1, 2, 3, 4, 5].indexOf("1"));
+    $("#indexOf2").html([1, 2, 3, 4, 5].indexOf("a"));
+    $("#indexOf3").html([1, 2, 3, 4, 5].indexOf(1));
+    $("#indexOf4").html([1, 2, 3, 4, 5].indexOf(5));
+
+    $("#filter1").html("[" + [1, 2, 3, 4, 5].filter(function(item, i){ return i < 2; }) + "]");
+    $("#filter2").html("[" + [1, 2, 3, 4, 5].filter(function(item, i){ return item > 2; }) + "]");
+    $("#filter3").html("[" + [1, 2, 3, 4, 5].filter(function(item, i){ return item > 5; }) + "]");
+    $("#filter4").html("[" + [1, 2, 3, 4, 5].filter(function(item, i){ return item % 2 === 0; }) + "]");
+    $("#filter5").html("[" + [1, 2, 3, 4, 5].filter(function(item, i){ return item % 2 !== 0; }) + "]");
+
+    $("#remove1").html([1, 2, 3, 4, 5, 5].remove("3"));
+    $("#remove2").html([1, 2, 3, 4, 5, 5].remove(3));
+    $("#remove3").html([1, 2, 3, 4, 5, 5].remove(5));
+
+    [6, 7, 8, 9, 10].forEach(function(item, i){ $("#forEach" + ++i).html(item); })
+</script>
+</body>
+</html>

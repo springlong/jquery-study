@@ -1,0 +1,75 @@
+*{padding:0;margin:0;}
+body{padding-bottom:100px;font:14px/2em "Microsoft YaHei";background:#fff;}
+h1{font-size:24px;margin:30px 0;}
+h2{font-size:18px;padding:10px 0 10px 10px;border-left:4px solid #5F890A;margin:30px 0;background:#f5f5f5;}
+h3{font-size:15px;margin:20px 0;}
+p{text-indent:2em;/*word-break:break-all;*/}
+strong{color:#c00000;}
+em,i{font-weight:bold;font-style:italic;}
+code{padding:0 4px;border:1px solid #ededed;border-radius:4px;margin:0 2px;background:#fdfdfd;font-family:"Courier New";}
+hr{margin:20px 0;}
+
+a{color:#0D71D1;text-decoration:underline;}
+a:hover{color:#E5760D;}
+a.external{padding-right:16px;margin:0 2px;background:url("../images/public/link_external.png") right center no-repeat;}
+.pic{margin:1em 0;}
+.pic img{border:5px solid #C1C1C1;}
+.pic2{text-indent:0;}
+.pic3{margin:0;}
+.picOpacity img{opacity:0.9;filter:ahpha(opacity=90);}
+.txtIndent{margin-left:2em;}
+.credit{color:green;}
+.credit strong{color:green;}
+.credit b{font-weight:normal;color:#c00000;}
+.moreMg{margin-top:10px;}
+
+.clearfix:after{content:"";clear:both;display:block;height:0;}
+.clearfix{zoom:1;}
+
+/*统一列表样式*/
+ul,ol{overflow:visible;padding-left:50px;margin:10px 0;}
+li{overflow:visible;}
+li ul,li ol{padding-left:20px;}
+ul>li{list-style:square;}
+ul ul>li{list-style:disc;}
+ol>li{list-style:decimal;}
+li p{text-indent:0;}
+.muchContent>li{margin-top:10px;}
+.muchContent>li:nth-child(odd){background:#eee;}
+.questions>li{margin-top:15px;}
+.questions>li p:first-child{margin-bottom:10px;}
+
+/*代码着色*/
+.html_code{position:relative;overflow:hidden;padding:10px;border:1px solid #ccc;border-radius:5px;margin:1em auto;margin-left:2em;font:12px/1.5em "Courier New";color:#333;background:#fafafa;}
+.html_code pre{overflow:auto;font-family:"Courier New";white-space:pre-wrap;word-wrap:break-word;}
+.html_code pre code{font-family:"Courier New";white-space:pre-wrap;}
+.html_code pre span.label,
+.html_code pre span.html,
+.html_code pre span.css_value{color:#0000ff;}
+.html_code pre span.attr,
+.html_code pre span.css_attr{color:#c00000;}
+.html_code pre span.value{color:#277C90;}
+.html_code pre span.comments,
+.html_code pre span.comments *{color:#087E1A !important;}
+.html_code pre span.js_method{color:#E00F0F;}
+.html_code pre span.js_object{font-weight:bold;color:#009900;}
+.html_code pre span.js_keywords{color:#0000ff;}
+.html_code pre span.js_str{color:#FF33CC;}
+.height_code .showMore{position:absolute;right:1px;bottom:1px;width:80px;height:30px;border-radius:5px;font-family:"Simsun";font-size:14px;line-height:30px;text-align:center;color:#fff;background:gray;cursor:pointer;opacity:0.5;}
+.height_code .showMore:hover{opacity:0.8;}
+li .html_code{margin-left:0;}
+
+/*使用说明*/
+#instruction{width:980px;margin:10px auto 0;}
+#instruction ol,#instruction ul,#instruction .add{padding-left:25px;}
+#instruction .add .title{margin:10px 0;}
+#instruction li{padding:10px;border:5px solid #93AD5A;margin-bottom:30px;}
+#instruction li .html_code{margin-left:15px;}
+#instruction li p{margin:5px 5px 5px 20px;}
+#instruction li .demo{position:relative;border-bottom:1px dashed #ddd;}
+#instruction li .button{text-align:right;border:0;}
+#instruction li .button button{width:150px;height:30px;margin-top:10px;text-align:center;text-indent:10px;}
+#instruction li .title{margin-left:0;border-bottom:none;margin-bottom:10px;font-size:16px;font-weight:bold;}
+#instruction li .title code{font-style:italic;padding:0;border:none;border-radius:0;margin:0;background:transparent;font-family:"Courier New";}
+#instruction li .result{position:absolute;right:0;top:0;float:left;width:120px;height:24px;*margin-top:-6px;text-align:left;}
+#instruction li .result span{padding:0 4px;border:1px solid #ededed;border-radius:4px;background:#fdfdfd;}

@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="gb2312">
+    <title>Cookie操作 - jsApp</title>
+    <link rel="stylesheet" href="css/main.css" />
+    <script src="jsApp.js"></script>
+    <script src="js/jsApp.syntax.js"></script>
+</head>
+<body>
+<div id="instruction">
+    <ol>
+        <li>
+            <p class="title"><code>navigator.cookieEnabled</code></p>
+            <p>该属性返回当前浏览器是否支持cookie操作。（返回类型：Boolean）</p>
+            <p>注：Chrome和webkit版Opera浏览器不支持本地文件操作cookie。</p>
+            <p class="demo">
+                <code>navigator.cookieEnabled</code>
+                <span class="result"><code id="cookieEnabled"></code></span>
+            </p>
+        </li>
+        <li>
+            <p class="title"><code>document.cookie</code></p>
+            <p>该属性是浏览器提供给开发人员管理当前域下的所有cookie的唯一途径（该属性为读写）。</p>
+            <p>对该属性进行读操作，可以获取已有的cookie内容；而对该属性进行写操作，则可以添加cookie或者对cookie进行重新赋值。</p>
+            <p>后面的<code>$.getCookie()</code>、<code>$.setCookie()</code>等方法都是对document.cookie扩展操作。</p>
+            <p>当前页面可访问的且已存在的cookie内容如下：</p>
+            <p id="cookieInfo"></p>
+        </li>
+        <li>
+            <p class="title"><code>$.getCookie(name)</code></p>
+            <p>获取指定cookie的值，如果没有则返回null。（返回类型：String | null）</p>
+            <p>参数name：cookie的名称；</p>
+            <p class="demo">
+                <code>$.getCookie("name")</code>
+                <span class="result"><code id="getCookieName"></code></span>
+            </p>
+            <p class="demo">
+                <code>$.getCookie("sex")</code>
+                <span class="result"><code id="getCookieSex"></code></span>
+            </p>
+            <p class="demo">
+                <code>$.getCookie("country")</code>
+                <span class="result"><code id="getCookieCountry"></code></span>
+            </p>
+            <p class="demo">
+                <code>$.getCookie("English")</code>
+                <span class="result"><code id="getCookieEnglish"></code></span>
+            </p>
+            <p class="demo">
+                <code>$.getCookie("Chinese")</code>
+                <span class="result"><code id="getCookieChinese"></code></span>
+            </p>
+            <p class="demo">
+                <code>$.getCookie("Math")</code>
+                <span class="result"><code id="getCookieMath"></code></span>
+            </p>
+        </li>
+        <li>
+            <p class="title"><code>$.setCookie(name, value, expires, config)</code></p>
+            <p>添加指定名称的cookie。（返回类型：undefined）</p>
+            <p>说明：后面添加的cookie将覆盖掉之前的cookie内容，因此该方法也可以执行对cookie的修改操作。</p>
+            <p>参数name：cookie的名称；</p>
+            <p>参数value：为cookie指定的值；</p>
+            <p>参数expires：（可选）指定当前cookie多长时间后失效（单位：分钟，1天=1440分钟），默认为会话结束后失效（等同于设置该参数为0）；</p>
+            <p>参数config：（可选）配置信息；（该参数通常无需设置，保持默认即可）</p>
+            <p>配置信息-path：指定可访问cookie的目录名称，默认值为“/”；</p>
+            <p>配置信息-domain：指定可访问cookie的主机名，默认值为空；</p>
+            <p>配置信息-secure：是否启用安全性，默认为false；</p>
+            <div class="html_code js_code">
+<pre>
+$.setCookie("name", "Jerry");   //添加名为name的cookie，并为其赋值为Jerry，浏览器会话结束后失效
+$.setCookie("sex", "boy");      //添加名为sex的cookie，并为其赋值为boy，浏览器会话结束后失效
+$.setCookie("country", "China");//添加名为country的cookie，并为其赋值为China，浏览器会话结束后失效
+</pre>
+            </div>
+            <p class="button"><button id="setCookie1">添加Cookie</button></p>
+            <div class="html_code js_code">
+<pre>
+$.setCookie("name", "Lucy");      //添加名为name的cookie，并为其赋值为Lucy，浏览器会话结束后失效
+$.setCookie("sex", "girl");       //添加名为sex的cookie，并为其赋值为girl，浏览器会话结束后失效
+$.setCookie("country", "America");//添加名为country的cookie，并为其赋值为America，浏览器会话结束后失效
+</pre>
+            </div>
+            <p class="button"><button id="setCookie2">添加Cookie</button></p>
+            <div class="html_code js_code">
+<pre>
+$.setCookie("English", "85", 1440);   //添加名为English的cookie，并为其赋值为85，1天后失效
+$.setCookie("Chinese", "90", 1440);   //添加名为Chinese的cookie，并为其赋值为90，1天后失效
+$.setCookie("Math", "100", 1440);     //添加名为Math的cookie，并为其赋值为100，1天后失效
+</pre>
+            </div>
+            <p class="button"><button id="setCookie3">添加Cookie</button></p>
+        </li>
+        <li>
+            <p class="title"><code>$.delCookie(name, config)</code></p>
+            <p>删除指定名称的cookie。（返回类型：undefined）</p>
+            <p>参数name：cookie的名称；</p>
+            <p>参数config：（可选）配置信息；（该参数通常无需设置，保持默认即可）</p>
+            <p>配置信息-path：添加cookie时所设置的目录名称，默认值为“/”；</p>
+            <p>配置信息-domain：添加cookie时所设置的主机名称，默认值为空；</p>
+            <div class="html_code js_code">
+<pre>
+$.delCookie("name");
+$.delCookie("sex");
+$.delCookie("country");
+</pre>
+            </div>
+            <p class="button"><button id="delCookie1">删除cookie</button></p>
+            <div class="html_code js_code">
+<pre>
+$.delCookie("English");
+$.delCookie("Chinese");
+$.delCookie("Math");
+</pre>
+            </div>
+            <p class="button"><button id="delCookie2">删除cookie</button></p>
+        </li>
+    </ol>
+    <div class="add">
+        <p class="title"><strong>关于该文档的一些说明</strong>：</p>
+        <p>点击上面的按钮，浏览器除了执行cookie的添加或删除操作外，还将更新先前通过<code>document.cookie</code>以及<code>$.getCookie()</code>获得的结果值。</p>
+        <p>如果该文档不能完全解答你的疑惑，你还可以点击<a href="13.2 Cookie操作-实例.html" target="_blank">这里</a>查看关于cookie的一个演示案例。</p>
+        <p class="title"><strong>关于cookie配置信息——path的补充说明</strong>：</p>
+        <p>假使cookie创建时的页面地址为http://www.xxx.com/syc/ts.html，那么在默认情况下该cookie仅能供sys目录下及其子级目录下的页面进行访问，像http://www.xxx.com/why/jjs.html这样的页面将无法访问该cookie，如果需要使why目录下的页面也能正常访问，则需要将path参数设置为“/why”，而如果需要使该网站的所有页面都有权限访问该cookie，则需要将path属性设置为网站根目录，即“path=/”。</p>
+        <p>一个页面可以根据path路径的不同而创建多个具有相同名称的cookie。这种情况下如果需要进行cookie的删除操作，则需要指明添加cookie时所设置的path路径。（注意：将path参数值指定为“/”，将无法删除path值为“/xxx”创建的cookie，如果需要删除该cookie，则必需指定delCookie方法的path参数值也为“/xxx”。）</p>
+        <div class="html_code js_code">
+<pre>
+//添加名为c1的cookie，赋值为test1，一天后失效。该cookie仅针对/news/目录下的页面开放权限。
+$.setCookie("c1", "test1", 1440, {path: "/news"});
+
+//上面添加的cookie必须使用下面的语句进行删除
+$.delCookie("c1", {path: "/news"});
+</pre>
+        </div>
+        <p class="title"><strong>关于cookie配置信息——domain的补充说明</strong>：</p>
+        <p>默认情况下，二级域名之间创建的cookie是不能相互被访问的。比如yes.xxx.com访问不了www.xxx.com域名下创建的cookie，如果需要实现二级域名之间能够互相被访问，则需要设置domain参数值为“.xxx.com”，这样才能保证hyck.xxx.com、osp.xxx.com、yes.xxx.com等域名下的网页也能够正常访问www.xxx.com域名下的网页所创建的cookie。当在www.xxx.com下创建一个cookie时，如果将该cookie的domain值指定为其他二级域名，那么该cookie将创建失败。</p>
+        <p>一个页面可以根据domain值的不同而创建多个具有相同名称的cookie。在这种情况下如果需要进行cookie的删除操作，则需要指明添加cookie时所设置的主机名称。</p>
+        <div class="html_code js_code">
+<pre>
+//添加名为c2的cookie，赋值为test2，会话结束后失效。该cookie针对xxx.com的所有二级域名开放权限。
+$.setCookie("c2", "test2", 0, {domain: ".xxx.com"});
+
+//上面添加的cookie必须使用下面的语句进行删除
+$.delCookie("c2", {domain: ".xxx.com"});
+</pre>
+        </div>
+        <p class="title"><strong>关于cookie配置信息——secure的补充说明</strong>：</p>
+        <p>默认情况下，使用http协议进行连接的页面即可进行cookie的访问操作；但设置该参数为true后，就只有通过https或者其它安全协议连接的页面才能进行对该cookie的访问。</p>
+        <div class="html_code js_code">
+<pre>
+//添加名为c3的cookie，赋值为test3，会话结束后失效。该cookie仅针对通过安全协议进行连接的页面开放权限。
+$.setCookie("c2", "test2", 0, {secure: true});
+
+//上面添加的cookie使用下面的语句即可删除
+$.delCookie("c2");
+</pre>
+        </div>
+    </div>
+</div>
+<script>
+    function showCookie()
+    {
+        $("#cookieInfo").css({"font-style": "italic"}).html(document.cookie || "[暂无Cookie内容]");
+        $("#getCookieName").html($.getCookie("name"));
+        $("#getCookieSex").html($.getCookie("sex"));
+        $("#getCookieCountry").html($.getCookie("country"));
+        $("#getCookieCity").html($.getCookie("city"));
+        $("#getCookieEnglish").html($.getCookie("English"));
+        $("#getCookieChinese").html($.getCookie("Chinese"));
+        $("#getCookieMath").html($.getCookie("Math"));
+    }
+    showCookie();
+
+    $("#cookieEnabled").html(navigator.cookieEnabled);
+    $("#setCookie1").click(function()
+    {
+        $.setCookie("name", "Jerry");   //添加名为name的cookie，并为其赋值为Jerry，浏览器会话结束后失效
+        $.setCookie("sex", "boy");      //添加名为sex的cookie，并为其赋值为boy，浏览器会话结束后失效
+        $.setCookie("country", "China");//添加名为country的cookie，并为其赋值为China，浏览器会话结束后失效 
+        alert("添加cookie操作已完成！");
+        showCookie();
+    });
+    $("#setCookie2").click(function()
+    {
+        $.setCookie("name", "Lucy");      //添加名为name的cookie，并为其赋值为Lucy，浏览器会话结束后失效
+        $.setCookie("sex", "girl");       //添加名为sex的cookie，并为其赋值为girl，浏览器会话结束后失效
+        $.setCookie("country", "America");//添加名为country的cookie，并为其赋值为America，浏览器会话结束后失效
+        alert("添加cookie操作已完成！");
+        showCookie();
+    });
+    $("#setCookie3").click(function()
+    {
+        $.setCookie("English", "85", 1440);   //添加名为English的cookie，并为其赋值为85，1天后失效
+        $.setCookie("Chinese", "90", 1440);   //添加名为Chinese的cookie，并为其赋值为90，1天后失效
+        $.setCookie("Math", "100", 1440);     //添加名为Math的cookie，并为其赋值为100，1天后失效
+        alert("添加cookie操作已完成！");
+        showCookie();
+    });
+    $("#delCookie1").click(function()
+    {
+        $.delCookie("name");
+        $.delCookie("sex");
+        $.delCookie("country");
+        alert("删除cookie操作已完成！");
+        showCookie();
+    });
+    $("#delCookie2").click(function()
+    {
+        $.delCookie("English");
+        $.delCookie("Chinese");
+        $.delCookie("Math");
+        alert("删除cookie操作已完成！");
+        showCookie();
+    });
+</script>
+</body>
+</html>

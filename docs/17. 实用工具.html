@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="gb2312">
+    <title>实用工具 - jsApp</title>
+    <link rel="stylesheet" href="css/main.css" />
+    <script src="jsApp.js"></script>
+    <script src="js/jsApp.syntax.js"></script>
+</head>
+<body>
+<div id="instruction">
+    <ol>
+        <li>
+            <p class="title"><code>$.each(obj, function(i, item){})</code></p>
+            <p>遍历数组或对象，并将每一项的索引和值参与回调函数的执行。（返回类型：undefined）</p>
+            <p>参数obj：需要进行遍历的数组或对象；</p>
+            <p>回调函数-参数i：当前项的索引值；</p>
+            <p>回调函数-参数item：当前项的值；</p>
+            <p>回调函数-this：当前项的值；</p>
+            <div class="html_code js_code">
+<pre>
+var obj = ["a", "b", "c"];
+$.each(obj, function(i, item)
+{
+    alert("当前项：" + i + "；值：" + item + "；this：" + this);
+});
+</pre>
+            </div>
+            <p class="button"><button id="each1">点击测试</button></p>
+            <div class="html_code js_code">
+<pre>
+var obj = {name: "Jerry", sex: "male", age: 22};
+$.each(obj, function(i, item)
+{
+    alert("当前项：" + i + "；值：" + item + "；this：" + this);
+});
+</pre>
+            </div>
+            <p class="button"><button id="each2">点击测试</button></p>
+        </li>
+        <li>
+            <p class="title"><code>$.time(callback)</code></p>
+            <p>计算回调函数的执行所需耗费的时间（单位：毫秒）。（返回类型：Number）</p>
+            <p>参数callback：回调函数；</p>
+            <div class="html_code js_code">
+<pre>
+var time = $.time(function()
+{
+    var i = 0, j = 0;
+    for(; i &lt; 1000000; i++)
+    {
+        j++;
+    }
+});
+alert("本次测试运行耗费：" + time + "ms");
+</pre>
+            </div>
+            <p class="button"><button id="time">点击测试</button></p>
+        </li>
+    </ol>
+</div>
+<script>
+    $("#each1").click(function()
+    {
+        var obj = ["a", "b", "c"];
+        $.each(obj, function(i, item)
+        {
+            alert("当前项：" + i + "；值：" + item + "；this：" + this);
+        });
+    });
+    $("#each2").click(function()
+    {
+        var obj = {name: "Jerry", sex: "male", age: 22};
+        $.each(obj, function(i, item)
+        {
+            alert("当前项：" + i + "；值：" + item + "；this：" + this);
+        });
+    });
+    $("#time").click(function()
+    {
+        var time = $.time(function()
+        {
+            var i = 0, j = 0;
+            for(; i < 1000000; i++)
+            {
+                j++;
+            }
+        });
+        alert("本次测试运行耗费：" + time + "ms");
+    });
+</script>
+</body>
+</html>
