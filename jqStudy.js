@@ -154,9 +154,9 @@
          */
         doReady = function()
         {
-            jsApp.each(readyList, function(index, callback)
+            jq.each(readyList, function(index, callback)
             {
-                callback.call(document, jsApp); //readyList被执行时，this指向document，而第一个参数则指向jsApp对象
+                callback.call(document, jq); //readyList被执行时，this指向document，而第一个参数则指向jq对象
             });
             document.addEventListener && document.removeEventListener("DOMContentLoaded", arguments.callee, false);
         },
@@ -368,7 +368,7 @@
                 //其他
                 default:
 
-                    result = jsApp.dashCase(name) + ":" + value;
+                    result = jq.dashCase(name) + ":" + value;
             }
             return result;
         },
@@ -407,7 +407,7 @@
             if(result === "auto" && /width|height/.test(name))
             {
                 //给IE设置width、height的属性值为auto时，即使使用计算后的样式对象也无法获取真实的值，在此使用.width()或.height方法进行重新获取。
-                result = name === "width" ? jsApp(ele).width() : jsApp(ele).height();
+                result = name === "width" ? jq(ele).width() : jq(ele).height();
             }
             return result;
         },
@@ -431,66 +431,6 @@
             }
         },
 
-        //用于attr()获取属性时进行筛选兼容
-        getAttrFilter = function(ele, attr)
-        {
-            var result;
-            switch(attr)
-            {
-                case "class":
-                    //如果元素的class属性为空字符串，则认为没有设置class属性
-                    result = ele.className || null;
-                    break;
-
-                case "style":
-                    //移除style属性后，值为空字符串
-                    result = ele.style.cssText || null;
-                    break;
-
-                case "tabindex":
-                    //当没有tabindex属性时，IE6/7中的值为0，而非null（tabindex属性属于元素属性）
-                    result = ele.getAttribute(attr) || null;
-                    break;
-
-                case "for":
-                    //label标签的for属性以DOM属性的形式进行存储，命名为htmlFor；其他标签如果有设置for属性，则作为元素属性进行访问
-                    result = "htmlFor" in ele ? ele.htmlFor : ele.getAttribute(attr);
-                    break;
-
-                default:
-                    //默认获取DOM属性，其次再取元素属性，与赋值时的操作保持目的一致性
-                    //目的一致性：如果需要操作DOM属性，使用node[属性名]进行；如果要操作元素属性，则使用node.setAttribute()和node.getAttribute()进行；
-                    result = ele[attr] || ele.getAttribute(attr);
-            }
-
-            return result || null;
-        },
-
-        //用于attr()设置属性时进行筛选兼容
-        /*----------------------------------
-         *说明：IE6、7、8中表单控件的type属性为只读
-         *      IE6、7、8中各焦点元素的tabindex属性设置无效
-         *      IE6、7、8中表单控件的maxlength属性设置无效
-         *      IE6、7中label标签的for属性设置无效
-         *--------------------------------------------------------------------------------------------------------------------*/
-        setAttrFilter = function(ele, attr, value)
-        {
-            switch(attr)
-            {
-                case "class":
-                    ele.className = value;
-                    break;
-
-                case "style":
-                    ele.style.cssText = value;
-                    break;
-
-                default:
-                    //当DOM对象的DOM属性值为空时，使用setAttribute方法进行赋值。因为采用该种方式时，无论目标属性是作为元素属性还是DOM属性，设置的结果值都会是正确的。
-                    ele[attr] === null || ele[attr] === undefined ? ele.setAttribute(attr, value) : (ele[attr] = value);
-            }
-        },
-
         //用于attr、css等方法中value参数值的筛选工作，即是直接的字符串值还是一个执行函数。
         //该函数在执行时，this关键字指向的是目标元素的引用。
         /*----------------------------------
@@ -500,7 +440,7 @@
          *=================================================================================*/
         filterValue = function(index, value)
         {
-            if(jsApp.isFunction(value))
+            if(jq.isFunction(value))
             {
                 return value.call(this, index);
             }
@@ -533,25 +473,25 @@
         $ = window.$,
 
         /**
-         * 构建基类jsApp
+         * 构建基类jq
          * @class
          * @global
          * @param  {String|Function|Window|DOMElement} selector 选择器（用来构建实例对象的基础组件）
          * @example
-         * var ele = jsApp("#element_ID");  //初始化jsApp对象实例，并返回目标ID元素的封装集合
+         * var ele = jq("#element_ID");  //初始化jq对象实例，并返回目标ID元素的封装集合
          */
-        jsApp = function(selector, context)
+        jq = function(selector, context)
         {
-            return new jsApp.init(selector, context);
+            return new jq.init(selector, context);
         };
 
     /**
-     * 初始化jsAPp对象实例
+     * 初始化jq对象实例
      * @param  {All} selector 选择器
      * @param  {DOMElement|DOMDocument} context  上下文
-     * @return {jsApp}
+     * @return {jq}
      */
-    jsApp.init = function(selector, context)
+    jq.init = function(selector, context)
     {
         var _self = this, ele;
 
@@ -566,11 +506,11 @@
         {
             if(/<|>/.test(selector))
             {
-                jsApp.merge(_self, convertNodes(selector));
+                jq.merge(_self, convertNodes(selector));
             }
             else
             {
-                jsApp.merge(_self, jsApp.find(selector, context));    
+                jq.merge(_self, jq.find(selector, context));    
             }
         }
         //匹配：$(DOMElement)、$(document)、$(window)
@@ -581,24 +521,24 @@
         }
         //匹配：$(function)
         //为ready事件提供的快捷方式
-        else if(jsApp.isFunction(selector))
+        else if(jq.isFunction(selector))
         {
             _self.ready(selector);
         }
         //匹配：$($("p"))
-        else if(jsApp.isJSApp(selector))
+        else if(jq.isjq(selector))
         {
             return selector;
         }
         //匹配：$(document.getElementsByTagName("p"))、$([1, 2, 3])、$(123)
         else
         {
-            jsApp.merge(_self, selector);
+            jq.merge(_self, selector);
         }
     }
 
-    //扩展jsApp对象的实例成员
-    jsApp.fn = jsApp.prototype = /** @lends jsApp.prototype */{
+    //扩展jq对象的实例成员
+    jq.fn = jq.prototype = /** @lends jq.prototype */{
         
         //元素集合的长度
         length: 0,
@@ -620,12 +560,12 @@
         get: function(index)
         {
             //如果没有index参数，则返回元素集合的数组形式
-            return jsApp.isNumeric(index) ? (index < 0 ? this[this.length + index] : this[index]) : this.toArray();
+            return jq.isNumeric(index) ? (index < 0 ? this[this.length + index] : this[index]) : this.toArray();
         },
 
         /**
          * 查询元素集合中的元素与查询条件的位置关系
-         * @param  {String|DOMElement|jsApp} condition 查询关系
+         * @param  {String|DOMElement|jq} condition 查询关系
          * @return {Number}
          */
         index: function(condition)
@@ -642,25 +582,25 @@
             }
             //如果为字符串则表示选择器
             //返回元素集合中第一个元素相对于选择器所匹配的元素集合的索引位置
-            else if(jsApp.isString(condition))
+            else if(jq.isString(condition))
             {
-                return arr_indexOf.call(jsApp(condition), ele);
+                return arr_indexOf.call(jq(condition), ele);
             }
 
-            //如果为DOM元素或者jsApp对象
-            //返回DOM元素或者jsApp对象元素集合中的第一个元素相对于原元素集合中的索引位置
-            ele = jsApp.isJSApp(condition) ? condition[0] : condition;
+            //如果为DOM元素或者jq对象
+            //返回DOM元素或者jq对象元素集合中的第一个元素相对于原元素集合中的索引位置
+            ele = jq.isjq(condition) ? condition[0] : condition;
             return arr_indexOf.call(this, ele);
         },
 
         /**
-         * 将元素数组加入到新的jsApp实例对象，并返回新的jsApp对象
+         * 将元素数组加入到新的jq实例对象，并返回新的jq对象
          * @param  {DOMElement Array} eles 元素数组
-         * @return {jsApp}
+         * @return {jq}
          */
         pushStack: function(eles)
         {
-            var result = jsApp.merge(jsApp(), eles);
+            var result = jq.merge(jq(), eles);
             result.prevObject = this;   //使用prevObject属性表示进行遍历筛选操作前的结果
             return result;
         },
@@ -668,19 +608,19 @@
         /**
          * 执行元素集合的遍历操作
          * @param {Function} callback 回调函数
-         * @return {jsApp}
+         * @return {jq}
          */
         each: function(callback)
         {
-            jsApp.each(this, callback);
+            var ret = jq.each(this, callback);
             return this;
         },
 
         /**
-         * 获取元素集合中索引值从start起始位置到end结束位置之间（不包括end）的所有元素构建的新的jsApp对象。
+         * 获取元素集合中索引值从start起始位置到end结束位置之间（不包括end）的所有元素构建的新的jq对象。
          * @param  {Number} [start] 起始位置
          * @param  {Number} [end] 结束位置
-         * @return {jsApp}
+         * @return {jq}
          */
         slice: function(start, end)
         {
@@ -692,9 +632,9 @@
         },
 
         /**
-         * 获取元素集合中指定索引的元素构建的新的jsApp对象
+         * 获取元素集合中指定索引的元素构建的新的jq对象
          * @param  {Number} index 索引值
-         * @return {jsApp}
+         * @return {jq}
          */
         eq: function(index)
         {
@@ -705,8 +645,8 @@
         },
 
         /**
-         * 获取元素集合中第一个元素构建的新的jsApp对象
-         * @return {jsApp}
+         * 获取元素集合中第一个元素构建的新的jq对象
+         * @return {jq}
          */
         first: function()
         {
@@ -715,8 +655,8 @@
         },
 
         /**
-         * 获取元素集合中最后一个元素构建的新的jsApp对象
-         * @return {jsApp}
+         * 获取元素集合中最后一个元素构建的新的jq对象
+         * @return {jq}
          */
         last: function()
         {
@@ -725,245 +665,245 @@
         },
 
         /**
-         * 获取元素集合中每个元素后一相邻节点所构建的新的jsApp对象
+         * 获取元素集合中每个元素后一相邻节点所构建的新的jq对象
          * @param {String} [selector] 选择器，只有满足该选择器时才会被返回
-         * @return {jsApp}
+         * @return {jq}
          */
         next: function(selector)
         {
             var result = [];
-            jsApp.each(this, function(index, ele)
+            jq.each(this, function(index, ele)
             {
                 (ele = nextElementSibling(ele)) !== null && result.push(ele);
             });
-            result = jsApp.unique(result);
-            return this.pushStack(jsApp.isValidString(selector) ? jsApp.matches(selector, result) : result);
+            result = jq.unique(result);
+            return this.pushStack(jq.isValidString(selector) ? jq.matches(selector, result) : result);
         },
 
         /**
-         * 获取元素集合中每个元素之后的所有兄弟节点所组成的新的jsApp对象
+         * 获取元素集合中每个元素之后的所有兄弟节点所组成的新的jq对象
          * @param {String} [selector] 选择器，只有满足该选择器时才会被返回
-         * @return {jsApp}
+         * @return {jq}
          */
         nextAll: function(selector)
         {
             var result = [];   
-            jsApp.each(this, function(index, ele)
+            jq.each(this, function(index, ele)
             {
                 while((ele = nextElementSibling(ele)) !== null)
                 {
                     result.push(ele);
                 }
             });
-            result = jsApp.unique(result);
-            return this.pushStack(jsApp.isValidString(selector) ? jsApp.matches(selector, result) : result);
+            result = jq.unique(result);
+            return this.pushStack(jq.isValidString(selector) ? jq.matches(selector, result) : result);
         },
 
         /**
-         * 获取元素集合中每个元素之后到满足停止条件之前的所有兄弟节点所组成的新的jsApp对象
-         * @param  {String|Function|jsApp|DOMElement} until    停止条件
+         * 获取元素集合中每个元素之后到满足停止条件之前的所有兄弟节点所组成的新的jq对象
+         * @param  {String|Function|jq|DOMElement} until    停止条件
          * @param  {String} selector 选择器，只有满足该选择器时才会被返回
-         * @return {jsApp}
+         * @return {jq}
          */
         nextUntil: function(until, selector)
         {
             var result = [];   
-            jsApp.each(this, function(index, ele)
+            jq.each(this, function(index, ele)
             {
-                while((ele = nextElementSibling(ele)) !== null && !jsApp(ele).is(until))
+                while((ele = nextElementSibling(ele)) !== null && !jq(ele).is(until))
                 {
                     result.push(ele);
                 }
             });
-            result = jsApp.unique(result);
-            return this.pushStack(jsApp.isValidString(selector) ? jsApp.matches(selector, result) : result);
+            result = jq.unique(result);
+            return this.pushStack(jq.isValidString(selector) ? jq.matches(selector, result) : result);
         },
 
         /**
-         * 获取元素集合中每个元素前一相邻节点所构建的新的jsApp对象
+         * 获取元素集合中每个元素前一相邻节点所构建的新的jq对象
          * @param {String} [selector] 选择器，只有满足该选择器时才会被返回
-         * @return {jsApp}
+         * @return {jq}
          */
         prev: function(selector)
         {
             var result = [];
-            jsApp.each(this, function(index, ele)
+            jq.each(this, function(index, ele)
             {
                 (ele = previousElementSibling(ele)) !== null && result.push(ele);
             });
-            result = jsApp.unique(result);
-            return this.pushStack(jsApp.isValidString(selector) ? jsApp.matches(selector, result) : result);
+            result = jq.unique(result);
+            return this.pushStack(jq.isValidString(selector) ? jq.matches(selector, result) : result);
         },
 
         /**
-         * 获取元素集合中每个元素之前的所有兄弟节点所组成的新的jsApp对象
+         * 获取元素集合中每个元素之前的所有兄弟节点所组成的新的jq对象
          * @param {String} [selector] 选择器，只有满足该选择器时才会被返回
-         * @return {jsApp}
+         * @return {jq}
          */
         prevAll: function(selector)
         {
             var result = [];   
-            jsApp.each(this, function(index, ele)
+            jq.each(this, function(index, ele)
             {
                 while((ele = previousElementSibling(ele)) !== null)
                 {
                     result.push(ele);
                 }
             });
-            result = jsApp.unique(result);
-            return this.pushStack(jsApp.isValidString(selector) ? jsApp.matches(selector, result) : result);
+            result = jq.unique(result);
+            return this.pushStack(jq.isValidString(selector) ? jq.matches(selector, result) : result);
         },
 
         /**
-         * 获取元素集合中每个元素之前到满足停止条件之后的所有兄弟节点所组成的新的jsApp对象
-         * @param  {String|Function|jsApp|DOMElement} until    停止条件
+         * 获取元素集合中每个元素之前到满足停止条件之后的所有兄弟节点所组成的新的jq对象
+         * @param  {String|Function|jq|DOMElement} until    停止条件
          * @param  {String} selector 选择器，只有满足该选择器时才会被返回
-         * @return {jsApp}
+         * @return {jq}
          */
         prevUntil: function(until, selector)
         {
             var result = [];   
-            jsApp.each(this, function(index, ele)
+            jq.each(this, function(index, ele)
             {
-                while((ele = previousElementSibling(ele)) !== null && !jsApp(ele).is(until))
+                while((ele = previousElementSibling(ele)) !== null && !jq(ele).is(until))
                 {
                     result.push(ele);
                 }
             });
-            result = jsApp.unique(result);
-            return this.pushStack(jsApp.isValidString(selector) ? jsApp.matches(selector, result) : result);
+            result = jq.unique(result);
+            return this.pushStack(jq.isValidString(selector) ? jq.matches(selector, result) : result);
         },
 
         /**
-         * 获取元素集合中每个元素所有兄弟节点所组成的新的jsApp对象
+         * 获取元素集合中每个元素所有兄弟节点所组成的新的jq对象
          * @param {String} [selector] 选择器，只有满足该选择器时才会被返回
-         * @return {jsApp}
+         * @return {jq}
          */
         siblings: function(selector)
         {
             var result = [];
-            jsApp.each(this, function(index, ele)
+            jq.each(this, function(index, ele)
             {
-                jsApp.merge(result, arr_filter.call(ele.parentNode.children, function(item){ return item !== ele }));
+                jq.merge(result, arr_filter.call(ele.parentNode.children, function(item){ return item !== ele }));
             });
-            result = jsApp.unique(result);
-            return this.pushStack(jsApp.isValidString(selector) ? jsApp.matches(selector, result) : result);
+            result = jq.unique(result);
+            return this.pushStack(jq.isValidString(selector) ? jq.matches(selector, result) : result);
         },
         
         /**
-         * 获取元素集合中每个元素所有子节点（不包含文字和注释节点）所组成的新的jsApp对象
+         * 获取元素集合中每个元素所有子节点（不包含文字和注释节点）所组成的新的jq对象
          * @param {String} [selector] 选择器，只有满足该选择器时才会被返回
-         * @return {jsApp}
+         * @return {jq}
          */
         children: function(selector)
         {
             var result = [];
-            jsApp.each(this, function(index, ele)
+            jq.each(this, function(index, ele)
             {
-                jsApp.merge(result, ele.children);
+                jq.merge(result, ele.children);
             });
-            result = jsApp.unique(result);
-            return this.pushStack(jsApp.isValidString(selector) ? jsApp.matches(selector, result) : result);
+            result = jq.unique(result);
+            return this.pushStack(jq.isValidString(selector) ? jq.matches(selector, result) : result);
         },
         
         /**
-         * 获取元素集合中每个元素所有子节点（包含文字和注释节点）所组成的新的jsApp对象
-         * @return {jsApp}
+         * 获取元素集合中每个元素所有子节点（包含文字和注释节点）所组成的新的jq对象
+         * @return {jq}
          */
         contents: function()
         {
             var result = [];
-            jsApp.each(this, function(index, ele)
+            jq.each(this, function(index, ele)
             {
-                jsApp.merge(result, arr_filter.call(ele.childNodes, function(item){ return item.nodeType !== 3 || /\S/.test(item.nodeValue) }));
+                jq.merge(result, arr_filter.call(ele.childNodes, function(item){ return item.nodeType !== 3 || /\S/.test(item.nodeValue) }));
             });
-            result = jsApp.unique(result);
+            result = jq.unique(result);
             return this.pushStack(result);
         },
 
         /**
-         * 获取元素集合中每个元素的父节点所组成的新的jsApp对象
+         * 获取元素集合中每个元素的父节点所组成的新的jq对象
          * @param {String} [selector] 选择器，只有满足该选择器时才会被返回
-         * @return {jsApp}
+         * @return {jq}
          */
         parent: function(selector)
         {
             var result = [];
-            jsApp.each(this, function(index, ele)
+            jq.each(this, function(index, ele)
             {
                 (ele = ele.parentNode) !== null && result.push(ele);
             });
-            result = jsApp.unique(result);
-            return this.pushStack(jsApp.isValidString(selector) ? jsApp.matches(selector, result) : result);
+            result = jq.unique(result);
+            return this.pushStack(jq.isValidString(selector) ? jq.matches(selector, result) : result);
         },
 
         /**
-         * 获取元素集合中每个元素的所有父节点（不包含根元素）所组成的新的jsApp对象
+         * 获取元素集合中每个元素的所有父节点（不包含根元素）所组成的新的jq对象
          * @param {String} [selector] 选择器，只有满足该选择器时才会被返回
-         * @return {jsApp}
+         * @return {jq}
          */
         parents: function(selector)
         {
             var result = [];   
-            jsApp.each(this, function(index, ele)
+            jq.each(this, function(index, ele)
             {
                 while((ele = ele.parentNode) !== null && ele.nodeType !== 9)
                 {
                     result.push(ele);
                 }
             });
-            result = jsApp.unique(result);
-            return this.pushStack(jsApp.isValidString(selector) ? jsApp.matches(selector, result) : result);
+            result = jq.unique(result);
+            return this.pushStack(jq.isValidString(selector) ? jq.matches(selector, result) : result);
         },
 
         /**
-         * 获取元素集合中每个元素一直匹配到满足停止条件为止的所有父节点（不包含根元素）所组成的新的jsApp对象
-         * @param  {String|Function|jsApp|DOMElement} until    停止条件
+         * 获取元素集合中每个元素一直匹配到满足停止条件为止的所有父节点（不包含根元素）所组成的新的jq对象
+         * @param  {String|Function|jq|DOMElement} until    停止条件
          * @param  {String} selector 选择器，只有满足该选择器时才会被返回
-         * @return {jsApp}
+         * @return {jq}
          */
         parentsUntil: function(until, selector)
         {
             var result = [];
-            jsApp.each(this, function(index, ele)
+            jq.each(this, function(index, ele)
             {
-                while((ele = ele.parentNode) !== null && ele.nodeType !== 9 && !jsApp(ele).is(until))
+                while((ele = ele.parentNode) !== null && ele.nodeType !== 9 && !jq(ele).is(until))
                 {
                     result.push(ele);
                 }
             });
-            result = jsApp.unique(result);
-            return this.pushStack(jsApp.isValidString(selector) ? jsApp.matches(selector, result) : result);
+            result = jq.unique(result);
+            return this.pushStack(jq.isValidString(selector) ? jq.matches(selector, result) : result);
         },
 
         /**
-         * 获取元素集合中每个元素满足筛选条件的第一个父级元素所组成的新的jsApp对象
-         * @param  {String|Function|jsApp|DOMElement} selector 筛选条件
+         * 获取元素集合中每个元素满足筛选条件的第一个父级元素所组成的新的jq对象
+         * @param  {String|Function|jq|DOMElement} selector 筛选条件
          * @param  {DOMElement} context  当筛选条件为选择器时，用于指定查询上下文
-         * @return {jsApp}
+         * @return {jq}
          */
         closest: function(selector, context)
         {
             var result = [];
-            jsApp.each(this, function(index, ele)
+            jq.each(this, function(index, ele)
             {
                 while((ele = ele.parentNode) !== null && ele.nodeType !== 9)
                 {
-                    if(jsApp(ele).is(selector, context))
+                    if(jq(ele).is(selector, context))
                     {
                         result.push(ele);
                         break;
                     }
                 }
             });
-            result = jsApp.unique(result);
+            result = jq.unique(result);
             return this.pushStack(result);
         },
 
         /**
-         * 遍历元素集合中的每一项，将回调函数返回的值组合成一个新的jsApp对象并返回（不包含null和undefined）
+         * 遍历元素集合中的每一项，将回调函数返回的值组合成一个新的jq对象并返回（不包含null和undefined）
          * @param  {Function} callback 回调函数
-         * @return {jsApp}
+         * @return {jq}
          */
         map: function(callback)
         {
@@ -971,49 +911,49 @@
             //回调函数-参数index：当前项的索引
             //回调函数-参数ele：当前项的值
             //回调函数-this：当前项的值
-            return this.pushStack(jsApp.map(this, function(ele, index)
+            return this.pushStack(jq.map(this, function(ele, index)
             {
                 return callback.call(ele, index, ele);
             }));
         },
 
         /**
-         * 对元素集合进行筛选操作，将符合条件的元素组合成新的jsApp对象并返回
-         * @param  {String|Function|DOMElement|jsApp} selector 筛选条件
-         * @return {jsApp}
+         * 对元素集合进行筛选操作，将符合条件的元素组合成新的jq对象并返回
+         * @param  {String|Function|DOMElement|jq} selector 筛选条件
+         * @return {jq}
          */
         filter: function(selector)
         {
             var result = [];
 
             //筛选出满足选择器条件的元素
-            if(jsApp.isString(selector))
+            if(jq.isString(selector))
             {
-                result = jsApp.matches(selector, this);
+                result = jq.matches(selector, this);
             }
             //筛选出回调函数返回true的元素
             //回调函数——参数index：元素集合当前项的索引值
             //回调函数——参数ele：元素集合当前项的值
             //回调函数——this：元素集合当前项的值
-            else if(jsApp.isFunction(selector))
+            else if(jq.isFunction(selector))
             {
-                jsApp.each(this, function(index, ele)
+                jq.each(this, function(index, ele)
                 {
                     selector.call(ele, index, ele) === true && result.push(ele);
                 });
             }
-            //筛选出jsApp对象中的元素
-            else if(jsApp.isJSApp(selector))
+            //筛选出jq对象中的元素
+            else if(jq.isjq(selector))
             {
-                jsApp.each(this, function(index, ele)
+                jq.each(this, function(index, ele)
                 {
                     arr_indexOf.call(selector, ele) >= 0 && result.push(ele);
                 });
             }
             //移除指定的DOM元素
-            else if(jsApp.isDOM(selector))
+            else if(jq.isDOM(selector))
             {
-                jsApp.each(this, function(index, ele)
+                jq.each(this, function(index, ele)
                 {
                     ele === selector && result.push(ele);
                 });
@@ -1023,42 +963,42 @@
         },
 
         /**
-         * 对元素集合进行筛选操作，将符合条件的元素从原元素集合中移除，并返回余下的元素所组成的新的jsApp对象
-         * @param  {String|Function|DOMElement|jsApp} selector 筛选条件
-         * @return {jsApp}
+         * 对元素集合进行筛选操作，将符合条件的元素从原元素集合中移除，并返回余下的元素所组成的新的jq对象
+         * @param  {String|Function|DOMElement|jq} selector 筛选条件
+         * @return {jq}
          */
         not: function(selector)
         {
             var result = [];
 
             //移除满足选择器条件的元素
-            if(jsApp.isString(selector))
+            if(jq.isString(selector))
             {
-                result = jsApp.matches(":not(" + selector + ")", this);
+                result = jq.matches(":not(" + selector + ")", this);
             }
             //移除回调函数返回true的元素
             //回调函数——参数index：元素集合当前项的索引值
             //回调函数——参数ele：元素集合当前项的值
             //回调函数——this：元素集合当前项的值
-            else if(jsApp.isFunction(selector))
+            else if(jq.isFunction(selector))
             {
-                jsApp.each(this, function(index, ele)
+                jq.each(this, function(index, ele)
                 {
                     selector.call(ele, index, ele) !== true && result.push(ele);
                 });
             }
-            //移除jsApp对象中的元素
-            else if(jsApp.isJSApp(selector))
+            //移除jq对象中的元素
+            else if(jq.isjq(selector))
             {
-                jsApp.each(this, function(index, ele)
+                jq.each(this, function(index, ele)
                 {
                     arr_indexOf.call(selector, ele) < 0 && result.push(ele);
                 });
             }
             //移除指定的DOM元素
-            else if(jsApp.isDOM(selector))
+            else if(jq.isDOM(selector))
             {
-                jsApp.each(this, function(index, ele)
+                jq.each(this, function(index, ele)
                 {
                     ele !== selector && result.push(ele);
                 });
@@ -1073,7 +1013,7 @@
 
         /**
          * 判断当前元素集合中是否含有满足目标参数条件的元素，如果有至少一个元素匹配则返回true
-         * @param  {String|Function|DOMElement|jsApp} selector 用于对比的目标参数
+         * @param  {String|Function|DOMElement|jq} selector 用于对比的目标参数
          * @param  {DOMElement} context  当筛选条件为选择器时，用于指定查询上下文
          * @return {Boolean}
          */
@@ -1082,34 +1022,34 @@
             var matches = [], result = false;
 
             //匹配选择器
-            if(jsApp.isString(selector))
+            if(jq.isString(selector))
             {
-                matches = jsApp.find(selector, context);
+                matches = jq.find(selector, context);
             }
             //匹配回调函数
             //回调函数——参数index：元素集合当前项的索引值
             //回调函数——参数ele：元素集合当前项的值
             //回调函数——this：元素集合当前项的值
-            else if(jsApp.isFunction(selector))
+            else if(jq.isFunction(selector))
             {
-                jsApp.each(this, function(index, ele)
+                jq.each(this, function(index, ele)
                 {
                     return !(result = selector.call(ele, index, ele));
                 });
                 return result;
             }
-            //匹配jsApp对象
-            else if(jsApp.isJSApp(selector))
+            //匹配jq对象
+            else if(jq.isjq(selector))
             {
                 matches = selector;
             }
             //匹配DOM元素
-            else if(jsApp.isDOM(selector))
+            else if(jq.isDOM(selector))
             {
                 matches = [selector];
             }
 
-            jsApp.each(this, function(index, ele)
+            jq.each(this, function(index, ele)
             {
                 return !(result = arr_indexOf.call(matches, ele) >= 0);
             });
@@ -1118,23 +1058,23 @@
         },
 
         /**
-         * 对元素集合进行筛选操作，将含有满足选择器条件的后代元素或包含指定HTML对象的元素组合成新的jsApp对象并返回
+         * 对元素集合进行筛选操作，将含有满足选择器条件的后代元素或包含指定HTML对象的元素组合成新的jq对象并返回
          * @param  {String|DOMElement}  selector 筛选条件
-         * @return {jsApp}
+         * @return {jq}
          */
         has: function(selector)
         {
             var result = [], matches;
 
             //筛选出后代元素中满足选择器条件的元素
-            if(jsApp.isString(selector))
+            if(jq.isString(selector))
             {
                 if(/^[^\s>+~]+$/.test(selector))
                 {
                     //当为并列关系或单个选择器时（该方式效率要远远高于下面）
-                    jsApp.each(this, function(index, ele)
+                    jq.each(this, function(index, ele)
                     {
-                        if(jsApp.find(selector, ele).length > 0)
+                        if(jq.find(selector, ele).length > 0)
                         {
                             result.push(ele);
                         }
@@ -1143,7 +1083,7 @@
                 else
                 {
                     //匹配：后代选择器（div p）、相邻选择器（div+p）、子选择器（div>p）、后续兄弟选择器（div~p）
-                    matches = jsApp.find(selector);
+                    matches = jq.find(selector);
                     return this.filter(function(index, ele)
                     {
                         var item, i = 0, len;
@@ -1155,9 +1095,9 @@
                 }
             }
             //筛选出包含指定HTML对象的元素
-            else if(jsApp.isDOM(selector))
+            else if(jq.isDOM(selector))
             {
-                jsApp.each(this, function(index, ele)
+                jq.each(this, function(index, ele)
                 {
                     if(ele.contains(selector) && ele !== selector)
                     {
@@ -1170,71 +1110,71 @@
         },
 
         /**
-         * 获取元素集合的每个元素中符合查询条件的所有子级元素，并将他们整合进新的jsApp对象
-         * @param  {String|DOMElement|jsApp} selector 查询条件
-         * @return {jsApp}
+         * 获取元素集合的每个元素中符合查询条件的所有子级元素，并将他们整合进新的jq对象
+         * @param  {String|DOMElement|jq} selector 查询条件
+         * @return {jq}
          */
         find: function(selector)
         {
             var result = [], i, len;
 
             //查询条件：符合选择器的所有元素
-            if(jsApp.isString(selector))
+            if(jq.isString(selector))
             {
-                jsApp.each(this, function(index, ele)
+                jq.each(this, function(index, ele)
                 {
-                    jsApp.merge(result, jsApp.find(selector, ele));
+                    jq.merge(result, jq.find(selector, ele));
                 });
             }
-            //查询条件：在DOM元素和jsApp对象中进行筛选
+            //查询条件：在DOM元素和jq对象中进行筛选
             else if(selector)
             {
-                selector = jsApp.isJSApp(selector) ? selector : [selector];
+                selector = jq.isjq(selector) ? selector : [selector];
                 len = selector.length;
-                jsApp.each(this, function(index, ele)
+                jq.each(this, function(index, ele)
                 {
                     for(i = 0; i < len; i++)
                     {
-                        jsApp.contains(ele, selector[i]) && result.push(selector[i]);
+                        jq.contains(ele, selector[i]) && result.push(selector[i]);
                     }
                 });
             }
 
-            return this.pushStack(jsApp.unique(result));
+            return this.pushStack(jq.unique(result));
         },
 
         /**
-         * 将新的元素数组、jsApp对象、DOM元素加入到元素集合中并以新的jsApp对象返回
-         * @param {String|jsApp|DOMElement} selector 添加的内容
+         * 将新的元素数组、jq对象、DOM元素加入到元素集合中并以新的jq对象返回
+         * @param {String|jq|DOMElement} selector 添加的内容
          * @param {DOMElement} context  当为选择器添加时作为查询上下文
-         * @return {jsApp}
+         * @return {jq}
          */
         add: function(selector, context)
         {
             var result = [];
 
             //将满足符合选择器的元素节点加入
-            if(jsApp.isString(selector))
+            if(jq.isString(selector))
             {
-                result = jsApp.find(selector, context);
+                result = jq.find(selector, context);
             }
-            //将jsApp对象加入
-            else if(jsApp.isJSApp(selector))
+            //将jq对象加入
+            else if(jq.isjq(selector))
             {
                 result = selector;
             }
             //将DOM元素加入
-            else if(jsApp.isDOM(selector))
+            else if(jq.isDOM(selector))
             {
                 result = [selector];
             }
 
-            return this.pushStack(jsApp.unique(jsApp.merge(result, this)));
+            return this.pushStack(jq.unique(jq.merge(result, this)));
         },
 
         /**
-         * 将本次元素集合加入到上一次获得的元素集合中并以新的jsApp对象返回
-         * @return {jsApp}
+         * 将本次元素集合加入到上一次获得的元素集合中并以新的jq对象返回
+         * @return {jq}
          */
         addBack: function()
         {
@@ -1243,7 +1183,7 @@
 
         /**
          * 终止最新的过滤操作，返回到上一次获得的元素集合
-         * @return {jsApp}
+         * @return {jq}
          */
         end: function()
         {
@@ -1251,8 +1191,8 @@
         },
 
         /**
-         * 移除目标元素下的所有内容，并返回原jsApp对象
-         * @return {jsApp}
+         * 移除目标元素下的所有内容，并返回原jq对象
+         * @return {jq}
          */
         empty: function()
         {
@@ -1263,14 +1203,14 @@
         },
 
         /**
-         * 将目标元素本身从文档中移除，并返回原jsApp对象
+         * 将目标元素本身从文档中移除，并返回原jq对象
          * @param  {String} selector 选择器条件（只有满足选择器条件的元素才会被移除）
-         * @return {jsApp}
+         * @return {jq}
          */
         remove: function(selector)
         {
-            selector = jsApp.isString(selector) ? jsApp.matches(selector, this) : this;
-            jsApp.each(selector, function(index, ele)
+            selector = jq.isString(selector) ? jq.matches(selector, this) : this;
+            jq.each(selector, function(index, ele)
             {
                 var parent = ele.parentNode;
                 parent && parent.removeChild(ele);
@@ -1279,10 +1219,10 @@
         },
 
         /**
-         * 将DOM元素、jsApp对象、HTML文本作为子节点加入到元素集合中每个元素内部的开头处，并返回原jsApp对象。
-         * 如果参数是DOM元素或者jsApp对象，则执行这些元素的移动操作，而非复制。
-         * @param  {String|Function|DOMElement|jsApp} contents 需要被添加的内容
-         * @return {jsApp}
+         * 将DOM元素、jq对象、HTML文本作为子节点加入到元素集合中每个元素内部的开头处，并返回原jq对象。
+         * 如果参数是DOM元素或者jq对象，则执行这些元素的移动操作，而非复制。
+         * @param  {String|Function|DOMElement|jq} contents 需要被添加的内容
+         * @return {jq}
          */
         prepend: function()
         {
@@ -1293,23 +1233,23 @@
         },
 
         /**
-         * 将元素集合中的每个元素作为子节点加入到目标元素内部的开头处，并返回执行操作后元素集合以及所有克隆元素所组成的新的jsApp对象
-         * @param  {String|DOMElement|jsApp} target 目标元素
-         * @return {jsApp}
+         * 将元素集合中的每个元素作为子节点加入到目标元素内部的开头处，并返回执行操作后元素集合以及所有克隆元素所组成的新的jq对象
+         * @param  {String|DOMElement|jq} target 目标元素
+         * @return {jq}
          */
         prependTo: function(target)
         {
-            return this.pushStack(jsApp(target).moveNode([this], function(ele, add)
+            return this.pushStack(jq(target).moveNode([this], function(ele, add)
             {
                 ele.insertBefore && ele.insertBefore(add, ele.firstChild);
             }, true));
         },
 
         /**
-         * 将DOM元素、jsApp对象、HTML文本作为子节点加入到元素集合中每个元素内部的末尾处，并返回原jsApp对象。
-         * 如果参数是DOM元素或者jsApp对象，则执行这些元素的移动操作，而非复制。
-         * @param  {String|Function|DOMElement|jsApp} contents 需要被添加的内容
-         * @return {jsApp}
+         * 将DOM元素、jq对象、HTML文本作为子节点加入到元素集合中每个元素内部的末尾处，并返回原jq对象。
+         * 如果参数是DOM元素或者jq对象，则执行这些元素的移动操作，而非复制。
+         * @param  {String|Function|DOMElement|jq} contents 需要被添加的内容
+         * @return {jq}
          */
         append: function()
         {
@@ -1320,23 +1260,23 @@
         },
 
         /**
-         * 将元素集合中的每个元素作为子节点加入到目标元素内部的末尾处，并返回执行操作后元素集合以及所有克隆元素所组成的新的jsApp对象
-         * @param  {String|DOMElement|jsApp} target 目标元素
-         * @return {jsApp}
+         * 将元素集合中的每个元素作为子节点加入到目标元素内部的末尾处，并返回执行操作后元素集合以及所有克隆元素所组成的新的jq对象
+         * @param  {String|DOMElement|jq} target 目标元素
+         * @return {jq}
          */
         appendTo: function(target)
         {
-            return this.pushStack(jsApp(target).moveNode([this], function(ele, add)
+            return this.pushStack(jq(target).moveNode([this], function(ele, add)
             {
                 ele.appendChild && ele.appendChild(add);
             }, true));
         },
 
         /**
-         * 将DOM元素、jsApp对象、HTML文本作为兄弟节点加入到元素集合中每个元素的前面，并返回原jsApp对象。
-         * 如果参数是DOM元素或者jsApp对象，则执行这些元素的移动操作，而非复制。
-         * @param  {String|Function|DOMElement|jsApp} contents 需要被添加的内容
-         * @return {jsApp}
+         * 将DOM元素、jq对象、HTML文本作为兄弟节点加入到元素集合中每个元素的前面，并返回原jq对象。
+         * 如果参数是DOM元素或者jq对象，则执行这些元素的移动操作，而非复制。
+         * @param  {String|Function|DOMElement|jq} contents 需要被添加的内容
+         * @return {jq}
          */
         before: function()
         {
@@ -1347,23 +1287,23 @@
         },
 
         /**
-         * 将元素集合中的每个元素作为兄弟节点加入到目标元素的前面，并返回执行操作后元素集合以及所有克隆元素所组成的新的jsApp对象
-         * @param  {String|DOMElement|jsApp} target 目标元素
-         * @return {jsApp}
+         * 将元素集合中的每个元素作为兄弟节点加入到目标元素的前面，并返回执行操作后元素集合以及所有克隆元素所组成的新的jq对象
+         * @param  {String|DOMElement|jq} target 目标元素
+         * @return {jq}
          */
         insertBefore: function(target)
         {
-            return this.pushStack(jsApp(target).moveNode([this], function(ele, add)
+            return this.pushStack(jq(target).moveNode([this], function(ele, add)
             {
                 ele.parentNode && ele.parentNode.insertBefore(add, ele);
             }, true));
         },
 
         /**
-         * 将DOM元素、jsApp对象、HTML文本作为兄弟节点加入到元素集合中每个元素的后面，并返回原jsApp对象。
-         * 如果参数是DOM元素或者jsApp对象，则执行这些元素的移动操作，而非复制。
-         * @param  {String|Function|DOMElement|jsApp} contents 需要被添加的内容
-         * @return {jsApp}
+         * 将DOM元素、jq对象、HTML文本作为兄弟节点加入到元素集合中每个元素的后面，并返回原jq对象。
+         * 如果参数是DOM元素或者jq对象，则执行这些元素的移动操作，而非复制。
+         * @param  {String|Function|DOMElement|jq} contents 需要被添加的内容
+         * @return {jq}
          */
         after: function()
         {
@@ -1374,13 +1314,13 @@
         },
 
         /**
-         * 将元素集合中的每个元素作为兄弟节点加入到目标元素的后面，并返回执行操作后元素集合以及所有克隆元素所组成的新的jsApp对象
-         * @param  {String|DOMElement|jsApp} target 目标元素
-         * @return {jsApp}
+         * 将元素集合中的每个元素作为兄弟节点加入到目标元素的后面，并返回执行操作后元素集合以及所有克隆元素所组成的新的jq对象
+         * @param  {String|DOMElement|jq} target 目标元素
+         * @return {jq}
          */
         insertAfter: function(target)
         {
-            return this.pushStack(jsApp(target).moveNode([this], function(ele, add)
+            return this.pushStack(jq(target).moveNode([this], function(ele, add)
             {
                 ele.parentNode && ele.parentNode.insertBefore(add, ele.nextSibling);
             }, true));
@@ -1390,11 +1330,11 @@
          * 针对prepend、append、before、after、prependTo、appendTo、insertBefore、insertAfter的统一操作（仅内部使用）。
          * 如果将相关节点进行位置移动操作，那么第一次执行操作时，进行的是对该节点本的移动操作；之后的每次操作则都是对该节点的clone副本进行的移动操作。
          * 节点本身的移动操作将保留原有的样式属性、元素属性、事件绑定等数据；而clone副本的移动操做则不保留事件的绑定数据（IE6~8除外）；另外在IE中clone的副本不保留复选框的选中状态。
-         * @param  {String|Function|DOMElement|jsApp} argus 需要被添加的内容参数
+         * @param  {String|Function|DOMElement|jq} argus 需要被添加的内容参数
          * @param  {Function} callback 控制操作如何进行
          * @param  {Boolean} returnClone 是否返回Clone后的所有元素
          * @param  {Boolean} doClone 是否执行克隆节点的操作
-         * @return {jsApp}
+         * @return {jq}
          */
         moveNode: function(argus, callback, returnClone, doClone)
         {
@@ -1407,12 +1347,12 @@
             //回调函数-参数index：元素集合当前项的索引值
             //回调函数-参数oldhtml：元素集合当前项的HTML文本内容
             //回调函数-this：元素集合当前项的值
-            if(jsApp.isFunction(value))
+            if(jq.isFunction(value))
             {
                 return this.each(function(index, ele)
                 {
                     argus[0] = value.call(ele, index, ele.innerHTML);
-                    jsApp(ele).moveNode(argus, callback, returnClone, index > 0);
+                    jq(ele).moveNode(argus, callback, returnClone, index > 0);
                 });
             }
 
@@ -1420,20 +1360,20 @@
             {
                 one = argus[i++];
 
-                //匹配DOM元素和jsApp对象
-                if(jsApp.isJSApp(one) || jsApp.isDOM(one))
+                //匹配DOM元素和jq对象
+                if(jq.isjq(one) || jq.isDOM(one))
                 {
-                    jsApp.merge(contents, one);
+                    jq.merge(contents, one);
                 }
                 //匹配字符串以及其他类型（undefined、null不进行添加）
                 else if(one != undefined)
                 {
-                    jsApp.merge(contents, convertNodes(one));
+                    jq.merge(contents, convertNodes(one));
                 }
             }
             len = contents.length;
 
-            jsApp.each(this, function(index, ele)
+            jq.each(this, function(index, ele)
             {
                 var fragment = document.createDocumentFragment(), add;
                 for(i = 0; i < len; i++)
@@ -1441,7 +1381,7 @@
                     try
                     {
                         //当执行appendTo、insertBefore等操作时无法确保被添加的对象是DOM元素
-                        add = index < 1 && !doClone ? contents[i] : jsApp.clone(contents[i]);
+                        add = index < 1 && !doClone ? contents[i] : jq.clone(contents[i]);
                         returnClone && clones.push(add);
                         fragment.appendChild(add);   
                     }
@@ -1454,34 +1394,34 @@
         },
 
         /**
-         * 将元素集合中的每个元素替换为目标内容，并返回原jsApp对象
-         * @param  {String|DOMElement|jsApp} target 目标元素
-         * @return {jsApp}
+         * 将元素集合中的每个元素替换为目标内容，并返回原jq对象
+         * @param  {String|DOMElement|jq} target 目标元素
+         * @return {jq}
          */
         replaceWith: function()
         {
-            jsApp.fn.before.apply(this, arguments);
+            jq.fn.before.apply(this, arguments);
             return this.remove();
         },
 
         /**
-         * 将目标元素替换为元素集合中的元素，并返回执行操作后元素集合以及所有克隆元素所组成的新的jsApp对象
-         * @param  {String|DOMElement|jsApp} target 目标元素
-         * @return {jsApp}
+         * 将目标元素替换为元素集合中的元素，并返回执行操作后元素集合以及所有克隆元素所组成的新的jq对象
+         * @param  {String|DOMElement|jq} target 目标元素
+         * @return {jq}
          */
         replaceAll: function(target)
         {
-            var result = this.insertBefore(target = jsApp(target));    
+            var result = this.insertBefore(target = jq(target));    
             target.remove();
             return result;
         },
 
         /**
-         * 将元素集合中的第一个元素外套一层目标容器，同时将其他元素移动至目标容器内，并返回原jsApp对象。
+         * 将元素集合中的第一个元素外套一层目标容器，同时将其他元素移动至目标容器内，并返回原jq对象。
          * 如果给定的目标容器是一个元素数组，则取第一个元素作为内套容器。
          * 如果参数是函数调用，则执行的是wrap操作。
-         * @param  {String|DOMElement|jsApp} content 目标容器
-         * @return {jsApp}
+         * @param  {String|DOMElement|jq} content 目标容器
+         * @return {jq}
          */
         wrapAll: function(content)
         {
@@ -1491,50 +1431,50 @@
             //回调函数-参数index：元素集合当前项的索引值
             //回调函数-参数ele：元素集合当前项的值
             //回调函数-this：元素集合当前项的值
-            if(jsApp.isFunction(content))
+            if(jq.isFunction(content))
             {
                 return this.each(function(index, ele)
                 {
-                    jsApp(ele).wrapAll(content.call(ele, index, ele));
+                    jq(ele).wrapAll(content.call(ele, index, ele));
                 });
             }
 
             //确保被外套的容器是一个有效的HTML元素，且元素集合不为空
-            if(this.length && jsApp.isElement(content = jsApp(content)[0]))
+            if(this.length && jq.isElement(content = jq(content)[0]))
             {
-                place = clone = jsApp.clone(content);
-                while(jsApp.isElement(place.firstChild))
+                place = clone = jq.clone(content);
+                while(jq.isElement(place.firstChild))
                 {
                     place = place.firstChild;
                 }
 
-                jsApp(this[0]).before(clone);
-                jsApp(place).append(this);
+                jq(this[0]).before(clone);
+                jq(place).append(this);
             }
 
             return this;
         },
 
         /**
-         * 将元素集合的每个元素外套一层目标容器（元素本身以及所有子节点将被包含在容器内），并返回原jsApp对象。
+         * 将元素集合的每个元素外套一层目标容器（元素本身以及所有子节点将被包含在容器内），并返回原jq对象。
          * 如果给定的目标容器是一个元素数组，则取第一个元素作为外套容器。
-         * @param  {String|Function|DOMElement|jsApp} content 目标容器
-         * @return {jsApp}
+         * @param  {String|Function|DOMElement|jq} content 目标容器
+         * @return {jq}
          */
         wrap: function(content)
         {
-            var isFunction = jsApp.isFunction(content);
+            var isFunction = jq.isFunction(content);
             return this.each(function(index, ele)
             {
-                jsApp(ele).wrapAll(isFunction ? content.call(ele, index, ele) : content);
+                jq(ele).wrapAll(isFunction ? content.call(ele, index, ele) : content);
             });
         },
 
         /**
-         * 将元素集合的每个元素内套一层目标容器（仅元素的子节点被包含在容器内），并返回原jsApp对象。
+         * 将元素集合的每个元素内套一层目标容器（仅元素的子节点被包含在容器内），并返回原jq对象。
          * 如果给定的目标容器是一个元素数组，则取第一个元素作为内套容器。
-         * @param  {String|Function|DOMElement|jsApp} content 目标容器
-         * @return {jsApp}
+         * @param  {String|Function|DOMElement|jq} content 目标容器
+         * @return {jq}
          */
         wrapInner: function(content)
         {
@@ -1542,39 +1482,39 @@
             //回调函数-参数index：元素集合当前项的索引值
             //回调函数-参数ele：元素集合当前项的值
             //回调函数-this：元素集合当前项的值
-            if(jsApp.isFunction(content))
+            if(jq.isFunction(content))
             {
                 return this.each(function(index, ele)
                 {
-                    jsApp(ele).wrapInner(content.call(ele, index, ele));
+                    jq(ele).wrapInner(content.call(ele, index, ele));
                 });
             }
 
             return this.each(function(index, ele)
             {
-                var _self = jsApp(ele), contents = _self.contents();
+                var _self = jq(ele), contents = _self.contents();
                 if(contents.length)
                 {
                     contents.wrapAll(content);
                 }
                 else
                 {
-                    _self.append(jsApp.clone(jsApp(content)[0]));
+                    _self.append(jq.clone(jq(content)[0]));
                 }
             });
         },
 
         /**
-         * 移除元素集合中各元素的外围容器，并返回原jsApp对象
-         * @return {jsApp}
+         * 移除元素集合中各元素的外围容器，并返回原jq对象
+         * @return {jq}
          */
         unwrap: function()
         {   
             return this.parent().each(function(index, ele)
             {
-                if(!jsApp.nodeName(ele, "body"))
+                if(!jq.nodeName(ele, "body"))
                 {
-                    ele = jsApp(ele);
+                    ele = jq(ele);
                     ele.replaceWith(ele.contents());                    
                 }
             }).end();
@@ -1584,7 +1524,7 @@
          * 目标1：获取元素集合中第一个元素的内部HTML内容；
          * 目标2：将元素集合中每个元素的内部HTML内容替换成新的HTML文本
          * @param  {String|Function} [html]  新的HTML文本
-         * @return {String|jsApp}  当获取HTML文本内容时，返回字符串格式；如果需要执行替换操作，则返回实例对象本身
+         * @return {String|jq}  当获取HTML文本内容时，返回字符串格式；如果需要执行替换操作，则返回实例对象本身
          */
         html: function(html)
         {
@@ -1597,12 +1537,12 @@
             //回调函数——参数index：元素集合当前项的索引值
             //回调函数——参数oldhtml：元素集合当前项的innerHTML属性值
             //回调函数——this：元素集合当前项的值
-            if(jsApp.isFunction(html))
+            if(jq.isFunction(html))
             {
                 return this.each(function(index, ele)
                 {
                     html = html.call(ele, index, ele.innerHTML);
-                    jsApp(ele).empty();
+                    jq(ele).empty();
                     ele.innerHTML = "" + html;
                 });
             }
@@ -1619,7 +1559,7 @@
          * 目标1：获取元素集合中第一个元素的内部文本内容（即将HTML标记全部去除的结果）:；
          * 目标2：将元素集合中每个元素的内部文本内容替换成新的文本内容（如果是HTML标记，将被进行转码处理）
          * @param  {String|Function} [html]  新的文本内容
-         * @return {String|jsApp}  当获取文本内容时，返回字符串格式；如果需要执行替换操作，则返回实例对象本身
+         * @return {String|jq}  当获取文本内容时，返回字符串格式；如果需要执行替换操作，则返回实例对象本身
          */
         text: function(text)
         {
@@ -1632,12 +1572,12 @@
             //回调函数——参数index：元素集合当前项的索引值
             //回调函数——参数oldtext：元素集合当前项的内部文本内容
             //回调函数——this：元素集合当前项的值
-            if(jsApp.isFunction(text))
+            if(jq.isFunction(text))
             {
                 return this.each(function(index, ele)
                 {
                     text = text.call(ele, index, ele.innerText || ele.textContent);
-                    jsApp(ele).empty();
+                    jq(ele).empty();
                     ele.appendChild(document.createTextNode("" + text));
                 });
             }
@@ -1651,11 +1591,11 @@
         },
 
         /**
-         * 为元素集合中的每个元素添加类名，并返回原jsApp对象。
+         * 为元素集合中的每个元素添加类名，并返回原jq对象。
          * 如果需要添加多个类名，则在字符串中使用空格隔开。
          * 如果参数为函数，则需要添加的类名字符串由函数进行返回。
          * @param {String|Function} name 需要添加的类名
-         * @return {jsApp}
+         * @return {jq}
          */
         addClass: function(name)
         {
@@ -1663,22 +1603,22 @@
             //回调函数——参数index：元素集合当前项的索引值
             //回调函数——参数oldClass：元素集合当前项的类名字符串
             //回调函数——this：元素集合当前项的值
-            if(jsApp.isFunction(name))
+            if(jq.isFunction(name))
             {
                 return this.each(function(index, ele)
                 {
-                    jsApp(ele).addClass(name.call(ele, index, ele.className));
+                    jq(ele).addClass(name.call(ele, index, ele.className));
                 });
             }
 
             //普通操作
             var len = this.length, ele, index = 0, className, addNames, item, i;
-            if(jsApp.isValidString(name))
+            if(jq.isValidString(name))
             {
                 addNames = name.match(reg_notwihte);
                 for(; index < len;)
                 {
-                    if(jsApp.isElement(ele = this[index++]))
+                    if(jq.isElement(ele = this[index++]))
                     {
                         i = 0;
                         className = " " + ele.className + " ";
@@ -1691,9 +1631,9 @@
                 }
             }
             // 注意：虽然下面的代码能够实现跟上面代码一样的功能，但是运行效率在对几百个节点进行操作时却要慢很多，如果对几十个节点进行操作则没有多大影响。
-            // if(jsApp.isValidString(name))
+            // if(jq.isValidString(name))
             // {
-            //     jsApp.each(this, function(index, ele)
+            //     jq.each(this, function(index, ele)
             //     {
             //         ele.className = (ele.className + " " + name).match(reg_notwihte).unique().join(" ");
             //     });
@@ -1702,12 +1642,12 @@
         },
 
         /**
-         * 为元素集合中的每个元素移除类名，并返回原jsApp对象。
+         * 为元素集合中的每个元素移除类名，并返回原jq对象。
          * 如果需要删除多个类名，则在字符串中使用空格隔开。
          * 如果没有参数，则表明移除元素中的所有类名。
          * 如果参数为函数，则需要删除的类名字符串由函数进行返回。
          * @param {String|Function} [name] 需要移除的类名
-         * @return {jsApp}
+         * @return {jq}
          */
         removeClass: function(name)
         {
@@ -1715,11 +1655,11 @@
             //回调函数——参数index：元素集合当前项的索引值
             //回调函数——参数oldClass：元素集合当前项的类名字符串
             //回调函数——this：元素集合当前项的值
-            if(jsApp.isFunction(name))
+            if(jq.isFunction(name))
             {
                 return this.each(function(index, ele)
                 {
-                    jsApp(ele).removeClass(name.call(ele, index, ele.className));
+                    jq(ele).removeClass(name.call(ele, index, ele.className));
                 });
             }
 
@@ -1734,12 +1674,12 @@
         
             //普通操作
             var len = this.length, ele, index = 0, className, removeNames, item, i;
-            if(jsApp.isValidString(name))
+            if(jq.isValidString(name))
             {
                 removeNames = name.match(reg_notwihte);
                 for(; index < len;)
                 {
-                    if(jsApp.isElement(ele = this[index++]))
+                    if(jq.isElement(ele = this[index++]))
                     {
                         i = 0;
                         className = " " + ele.className + " ";
@@ -1759,14 +1699,14 @@
         },
 
         /**
-         * 为元素集合中每个元素切换类名状态，并返回原jsApp对象。
+         * 为元素集合中每个元素切换类名状态，并返回原jq对象。
          * 如果需要切换多个类名状态，则在字符串中使用空格隔开。
          * 如果第一个参数为Function，则需要切换的类名由回调函数返回。
          * 如果参数为空，则每次切换所有的类名状态——移除所有类名、恢复所有类名。
          * 如果第一个参数为true，同参数为空时一样，每次都切换所有的类名状态；而如果第一个参数为false，仅移除所有类名（可通过无参数的toggleClass方法再次恢复所有类名）。
          * @param {String|Function|Boolean} [name] 需要切换的类名
          * @param {Boolean} [add] 控制状态：true表示添加；false表示移除；没有该参数，则表示已存在则删除，不存在则添加。
-         * @return {jsApp}
+         * @return {jq}
          */
         toggleClass: function(name, add)
         {
@@ -1783,22 +1723,22 @@
             //回调函数——参数oldClass：元素集合当前项的类名字符串
             //回调函数——参数add：控制状态
             //回调函数——this：元素集合当前项的值
-            if(jsApp.isFunction(name))
+            if(jq.isFunction(name))
             {
                 return this.each(function(index, ele)
                 {
-                    jsApp(ele).toggleClass(name.call(ele, index, ele.className, add), add);
+                    jq(ele).toggleClass(name.call(ele, index, ele.className, add), add);
                 });
             }
 
             //在指定的类名字符串中进行切换操作
-            if(jsApp.isValidString(name))
+            if(jq.isValidString(name))
             {
                 toggleNames = name.match(reg_notwihte);
-                jsApp.each(this, function(index, ele)
+                jq.each(this, function(index, ele)
                 {
                     var item, i = 0;
-                    ele = jsApp(ele);
+                    ele = jq(ele);
                     while(item = toggleNames[i++])
                     {
                         ele.hasClass(item) ? ele.removeClass(item) : ele.addClass(item);
@@ -1808,9 +1748,9 @@
             //切换所有的类名状态
             else if(name === undefined || type === "boolean")
             {
-                jsApp.each(this, function(index, ele)
+                jq.each(this, function(index, ele)
                 {
-                    if(jsApp.isElement(ele))
+                    if(jq.isElement(ele))
                     {
                         var className = ele.className;
                         if(className !== "")
@@ -1832,12 +1772,12 @@
         hasClass: function(name)
         {
             var i = 0, len = this.length, ele;
-            if(jsApp.isValidString(name))
+            if(jq.isValidString(name))
             {
                 for(; i < len;)
                 {
                     ele = this[i++];
-                    if(jsApp.isElement(ele) && (" " + ele.className + " ").indexOf(" " + name + " ") >= 0)
+                    if(jq.isElement(ele) && (" " + ele.className + " ").indexOf(" " + name + " ") >= 0)
                     {
                         return true;
                     }
@@ -1852,23 +1792,27 @@
         //注意：value参数值可以是字符串值，也可以是一个函数调用。当为函数调用时，调用函数中的this指向的是目标元素，而第一个参数为index——表示元素在匹配集合中的索引。
         attr: function(name, value)
         {
+            var isJSON = jq.isPlainObject(name);
+
+            if(this.length < 1)
+            {
+                return this;
+            }
+
+            if(!isJSON && value === undefined)
+            {
+                return jq.attr(this[0], name);
+            }
+
             return this.each(function(index, ele)
             {
-                var isJSON = jsApp.isPlainObject(name),
-                    items = {},
-                    i;
-
-                if(!isJSON && value === undefined)
-                {
-                    return getAttrFilter(ele, name);
-                }
+                var items = {}, i;
 
                 isJSON ? (items = name) : (items[name] = value);
                 for(i in items)
                 {
-                    setAttrFilter(ele, i, filterValue.call(ele, index, items[i]));
+                    jq.attr(ele, i, filterValue.call(ele, index, items[i]));
                 }
-                return this;
             });
         },
 
@@ -1909,15 +1853,15 @@
             }
 
             //获取单个或多个样式的值
-            if(!jsApp.isPlainObject(name) && value === undefined)
+            if(!jq.isPlainObject(name) && value === undefined)
             {
                 obj = this[0];
 
-                if(jsApp.isString(name))
+                if(jq.isString(name))
                 {
                     result = getCSS(obj, name);   
                 }
-                else if(jsApp.isArray(name))
+                else if(jq.isArray(name))
                 {
                     result = {};
                     name.forEach(function(item)
@@ -1928,13 +1872,13 @@
                 return result;
             }
             //设置单个样式的值
-            else if(jsApp.isString(name))
+            else if(jq.isString(name))
             {
-                if(jsApp.isString(value))
+                if(jq.isString(value))
                 {
                     css = ";" + cssString(name, value);
                 }
-                else if(jsApp.isFunction(value))
+                else if(jq.isFunction(value))
                 {
                     return this.each(function(index, ele)
                     {
@@ -2066,36 +2010,36 @@
         }
 
     };
-    jsApp.init.prototype = jsApp.fn;
+    jq.init.prototype = jq.fn;
 
     /**
-     * 扩展jsApp对象的静态成员（使用jsApp.xx访问）
+     * 扩展jq对象的静态成员（使用jq.xx访问）
      * @method
      * @name extend
-     * @memberof jsApp
+     * @memberof jq
      * @param  {Object} members 需要扩展的成员集合
      * @example
-     * jsApp.extend({
+     * jq.extend({
      *     e1: function(){},
      *     e2: function(){}
      * });
      */
      /**
-     * 扩展jsApp对象的实例成员（使用new jsApp().xx访问）
+     * 扩展jq对象的实例成员（使用new jq().xx访问）
      * @method
      * @name extend
-     * @memberof jsApp.prototype
+     * @memberof jq.prototype
      * @param  {Object} members 需要扩展的成员集合
      * @example
-     * jsApp.fn.extend({
+     * jq.fn.extend({
      *     e1: function(){},
      *     e2: function(){}
      * });
      */
-    jsApp.extend = jsApp.fn.extend = function()
+    jq.extend = jq.fn.extend = function()
     {
         //当第1个参数为布尔值时，该参数用来表示是否进行深度合并（深度合并表示在进行合并操作时也对嵌套的子对象进行合并）
-        //当参数个数等于1，且不是布尔值时，则将该参数的各个成员合并至jsApp或者jsApp.fn中
+        //当参数个数等于1，且不是布尔值时，则将该参数的各个成员合并至jq或者jq.fn中
         //当参数个数大于1，且第1个参数不是布尔值时，则将后续参数中的各成员合并至第1个参数中
         //合并处理时，相同名称的元素将被后面的值覆盖
         var name, item, src, collection,
@@ -2124,10 +2068,10 @@
             for(name in collection) //该语句对null、undefined、数字、布尔值不会执行遍历操作
             {
                 item = collection[name];
-                if(deep && jsApp.isPlainObject(item) && (src = target[name]) !== undefined)
+                if(deep && jq.isPlainObject(item) && (src = target[name]) !== undefined)
                 {
-                    if(!jsApp.isPlainObject(src)){ src = {}; }  //确保深度合并的结果为PlainObject类型
-                    target[name] = jsApp.extend(deep, src, item);
+                    if(!jq.isPlainObject(src)){ src = {}; }  //确保深度合并的结果为PlainObject类型
+                    target[name] = jq.extend(deep, src, item);
                 }
                 else if(item !== undefined)
                 {
@@ -2137,20 +2081,20 @@
             }
         }
 
-        //将被扩展后的目标对象返回（可能是jsApp对象，也可能是其他对象）
+        //将被扩展后的目标对象返回（可能是jq对象，也可能是其他对象）
         return target;
     };
 
-    //扩展jsApp对象的静态成员（外部使用）
-    jsApp.extend(/** @lends jsApp */{
+    //扩展jq对象的静态成员（外部使用）
+    jq.extend(/** @lends jq */{
 
         /**
-         * 使jsApp避免$的命名冲突。执行该代码后如果$当前表示的是jsApp对象，则让其恢复至被赋值为jsApp之前的值。
+         * 使jq避免$的命名冲突。执行该代码后如果$当前表示的是jq对象，则让其恢复至被赋值为jq之前的值。
          */
         noConflict: function()
         {
-            window.$ === jsApp && (window.$ = $);
-            return jsApp;
+            window.$ === jq && (window.$ = $);
+            return jq;
         },
 
         /**
@@ -2187,7 +2131,7 @@
          */
         globalEval: function(doSometing)
         {
-            if(jsApp.isValidString(doSometing))
+            if(jq.isValidString(doSometing))
             {
                 try
                 {
@@ -2224,7 +2168,7 @@
             //回调函数-参数index：当前项的索引
             //回调函数-参数ele：当前项的值
             //回调函数-this：当前项的值
-            if(jsApp.isArrayLike(obj))
+            if(jq.isArrayLike(obj))
             {
                 for(len = obj.length; i < len; i++)
                 {
@@ -2259,9 +2203,9 @@
             //如果参数为undefined或者null时，返回空数组
             if(data != undefined)
             {
-                if(jsApp.isArrayLike(data) && !jsApp.isString(data))
+                if(jq.isArrayLike(data) && !jq.isString(data))
                 {
-                    jsApp.merge(result, data);
+                    jq.merge(result, data);
                 }
                 else
                 {
@@ -2281,10 +2225,10 @@
         {
             var i = 0, j, len;
 
-            if(!jsApp.isArrayLike(first)) first = [];
+            if(!jq.isArrayLike(first)) first = [];
             j = first.length;
 
-            if(jsApp.isArrayLike(second))
+            if(jq.isArrayLike(second))
             {
                 for(len = second.length; i < len;)
                 {
@@ -2314,7 +2258,7 @@
             //回调函数-参数ele：当前项的值
             //回调函数-参数index：当前项的索引
             //回调函数-this：window
-            if(jsApp.isArrayLike(arr))
+            if(jq.isArrayLike(arr))
             {
                 for(len = arr.length; i < len; )
                 {
@@ -2401,7 +2345,7 @@
         {
             var valueStr = [], index = 0;
 
-            if(!jsApp.isNumeric(num)){ return "0"; }
+            if(!jq.isNumeric(num)){ return "0"; }
 
             while(num > 15)
             {
@@ -2415,7 +2359,7 @@
             {
                 digit = valueStr.length;
             }
-            return jsApp.padStr(valueStr.reverse().join(""), "left", digit, "0");
+            return jq.padStr(valueStr.reverse().join(""), "left", digit, "0");
         },
 
         /**
@@ -2460,13 +2404,13 @@
         },
 
         /**
-         * 判断类型是否为：jsApp对象
+         * 判断类型是否为：jq对象
          * @param  {任意类型}  value 需要判断的值
          * @return {Boolean}       是/否
          */
-        isJSApp: function(value)
+        isjq: function(value)
         {
-            return value instanceof jsApp;
+            return value instanceof jq;
         },
 
         /**
@@ -2496,7 +2440,7 @@
          */
         isNumeric: function(value)
         {
-            return jsApp.type(value) === "number" && !isNaN(value);
+            return jq.type(value) === "number" && !isNaN(value);
         },
 
         /**
@@ -2506,7 +2450,7 @@
          */
         isFunction: function(value)
         {
-            return jsApp.type(value) === "function";
+            return jq.type(value) === "function";
         },
 
         /**
@@ -2516,7 +2460,7 @@
          */
         isArray: function(value)
         {
-            return jsApp.type(value) === "array";
+            return jq.type(value) === "array";
         },
 
         /**
@@ -2527,7 +2471,7 @@
          */
         isArrayLike: function(value)
         {
-            return value != null && !jsApp.isWindow(value) && !jsApp.isFunction(value) && typeof(value.length) === "number";
+            return value != null && !jq.isWindow(value) && !jq.isFunction(value) && typeof(value.length) === "number";
         },
 
         /**
@@ -2537,7 +2481,7 @@
          */
         isDate: function(value)
         {
-            return jsApp.type(value) === "date";
+            return jq.type(value) === "date";
         },
 
         /**
@@ -2557,7 +2501,7 @@
          */
         isPlainObject: function(value)
         {
-            return jsApp.type(value) === "object" && value.toString().toLowerCase() === "[object object]";
+            return jq.type(value) === "object" && value.toString().toLowerCase() === "[object object]";
         },
 
         /**
@@ -2568,7 +2512,7 @@
         isEmptyObject: function(value)
         {
             var name;
-            if(jsApp.isArrayLike(value)) return value.length < 1;
+            if(jq.isArrayLike(value)) return value.length < 1;
             for(name in value)
             {
                 return false;
@@ -2777,7 +2721,7 @@
          */
         browser: (function()
         {
-            var browser = /** @lends jsApp.browser */{
+            var browser = /** @lends jq.browser */{
 
                 /**
                  * 浏览器名称（如：MSIE、Firefox、Safari、Chrome、Opera）
@@ -2841,7 +2785,7 @@
                 {
                     document.createElement(tags[i]);
                 }
-                document.write('<style id="jsApp_selectorStyle">* html{background-image:url(about:blank);}header,footer,aside,article,section,hgroup,nav,menu,canvas,details,figure,figcaption,audio,video{display:block;}</style>')
+                document.write('<style id="jq_selectorStyle">* html{background-image:url(about:blank);}header,footer,aside,article,section,hgroup,nav,menu,canvas,details,figure,figcaption,audio,video{display:block;}</style>')
             }
 
             //解决IE6浏览器不缓存背景图片的Bug
@@ -2867,8 +2811,8 @@
         }())
     });
 
-    //扩展jsApp对象的静态成员（内部使用）
-    jsApp.extend(/** @lends jsApp */{
+    //扩展jq对象的静态成员（内部使用）
+    jq.extend(/** @lends jq */{
 
         /**
          * 判断目标元素的节点名称是否与指定值相符
@@ -2937,7 +2881,7 @@
         {
             var result, attr;
             
-            if(!jsApp.isElement(ele)) return; //如果目标元素不是HTML标签，则直接返回undefined
+            if(!jq.isElement(ele)) return; //如果目标元素不是HTML标签，则直接返回undefined
             name = name.toLowerCase();
 
             //返回属性值
@@ -2979,7 +2923,7 @@
             //设置属性值
             //IE6、7、8中表单控件的type属性为只读
             //IE6、7、8中表单控件的maxlength属性设置无效
-            if(value === null) jsApp.removeAttr(ele, name);
+            if(value === null) jq.removeAttr(ele, name);
             switch(name)
             {
                 case "class":
@@ -3019,7 +2963,7 @@
          */
         removeAttr: function(ele, name)
         {
-            if(jsApp.isElement(ele))
+            if(jq.isElement(ele))
             {
                 name === "class" ? ele.className = "" : ele.removeAttribute(name);    
             }            
@@ -3027,17 +2971,17 @@
 
     });
 
-    //对jsApp的原型进行扩展：事件绑定的快捷方式
-    jsApp.each("mousewheel,mouseover,mousemove,mouseout,mousedown,mouseup,mouseenter,mouseleave,click,dblclick,focus,blur,change,keydown,keypress,keyup,load,unload,beforeunload,resize,scroll,error,contextmenu,hashchange".split(","),
+    //对jq的原型进行扩展：事件绑定的快捷方式
+    jq.each("mousewheel,mouseover,mousemove,mouseout,mousedown,mouseup,mouseenter,mouseleave,click,dblclick,focus,blur,change,keydown,keypress,keyup,load,unload,beforeunload,resize,scroll,error,contextmenu,hashchange".split(","),
     function(i, name)
     {
-        jsApp.fn[name] = function(handler, capture)
+        jq.fn[name] = function(handler, capture)
         {
             this.bind(name, handler, capture);
         };
     });
 
-    window.$ = window.jsApp = jsApp;   //将jsApp转换为全局对象（之后该匿名函数将形成一个闭包）
+    window.$ = window.jq = jq;   //将jq转换为全局对象（之后该匿名函数将形成一个闭包）
 
 })(window);
 
@@ -5051,10 +4995,10 @@
         });
     }
 
-    //Add to jsApp
-    jsApp.find = Sizzle;
-    jsApp.matchesSelector = Sizzle.matchesSelector;
-    jsApp.matches = Sizzle.matches;
-    jsApp.contains = Sizzle.contains;
-    jsApp.unique = Sizzle.uniqueSort;
+    //Add to jq
+    jq.find = Sizzle;
+    jq.matchesSelector = Sizzle.matchesSelector;
+    jq.matches = Sizzle.matches;
+    jq.contains = Sizzle.contains;
+    jq.unique = Sizzle.uniqueSort;
 })(window);
